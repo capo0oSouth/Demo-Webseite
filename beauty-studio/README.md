@@ -78,6 +78,9 @@ Fotos werden automatisch eingebunden, sobald sie unter `src/assets/photos/<name>
 Namen, Formate und fachliche Anforderungen stehen in [PHOTOS.md](./PHOTOS.md). Ohne Foto zeigt
 jede Bildfläche eine gestaltete Illustration.
 
+Zehn Bildplätze zeigen bereits geprüfte CC0-Fotos (Nachweise in PHOTOS.md). Die Team-Porträts
+sind bewusst Monogramme: Hier gehören echte Fotos der Inhaberinnen hin.
+
 ## Trennung von anderen Projekten im Repository
 
 - Alle Dateien dieses Projekts liegen ausschliesslich in `beauty-studio/`.

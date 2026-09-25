@@ -87,6 +87,7 @@ const illustrationFor: Partial<Record<Fallback, IllustrationName>> = {
     loading={loading}
     fetchpriority={loading === 'eager' ? 'high' : 'auto'}
     class:list={['photo', className]}
+    pictureAttributes={{ class: 'photo-frame' }}
     style={`object-position: ${position}`}
   />
 ) : (
@@ -119,6 +120,13 @@ const illustrationFor: Partial<Record<Fallback, IllustrationName>> = {
 )}
 
 <style>
+  /* Das <picture>-Element muss die Fläche ausfüllen, sonst behält das Bild seine eigene Höhe. */
+  :global(.photo-frame) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
   .photo {
     display: block;
     width: 100%;
