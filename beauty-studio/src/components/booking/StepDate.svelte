@@ -91,6 +91,7 @@
   }
 
   function pickSlot(slot: Slot) {
+    booking.slotNotice = null;
     booking.time = slot.time;
     const preferred = booking.treatment?.staff.find((id) => slot.staff.includes(id));
     booking.assignedStaff = preferred ?? slot.staff[0];
@@ -131,6 +132,10 @@
 
   const endTime = (start: number) => minutesToTime(start + duration);
 </script>
+
+{#if booking.slotNotice}
+  <p class="slot-notice" role="status">{booking.slotNotice}</p>
+{/if}
 
 {#if nextFree}
   <button type="button" class="quick" onclick={takeNextFree}>
@@ -295,6 +300,15 @@
 </div>
 
 <style>
+  .slot-notice {
+    margin-bottom: 1.2rem;
+    padding: 0.8rem 1rem;
+    border-radius: 14px;
+    background: var(--gold-200);
+    color: #574120;
+    font-size: 0.9rem;
+  }
+
   .quick {
     width: 100%;
     display: grid;

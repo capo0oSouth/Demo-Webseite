@@ -54,6 +54,8 @@ export class BookingState {
     terms: false,
   });
   notice = $state<string | null>(null);
+  /** Hinweis im Terminschritt, wenn eine gewählte Uhrzeit wegen neuer Dauer entfernt wurde. */
+  slotNotice = $state<string | null>(null);
   confirmed = $state<{ code: string } | null>(null);
 
   treatment: Treatment | null = $derived(this.treatmentId ? treatmentById[this.treatmentId] : null);
@@ -124,9 +126,11 @@ export class BookingState {
     const slots = slotsFor(this.staffPool, fromISO(this.date), this.price.minutes);
     const slot = slots.find((s) => s.time === this.time);
     if (!slot) {
+      const old = this.time;
       this.time = null;
       this.assignedStaff = null;
       this.notice = 'Die Behandlungsdauer hat sich geändert – bitte wähle deine Uhrzeit neu.';
+      this.slotNotice = `Deine bisherige Zeit (${old} Uhr) passt nicht mehr zur neuen Behandlungsdauer. Bitte wähle eine neue Uhrzeit.`;
     } else if (this.assignedStaff && !slot.staff.includes(this.assignedStaff)) {
       this.assignedStaff = slot.staff[0];
     }
@@ -177,6 +181,7 @@ export class BookingState {
       terms: false,
     };
     this.notice = null;
+    this.slotNotice = null;
     this.confirmed = null;
   }
 }
