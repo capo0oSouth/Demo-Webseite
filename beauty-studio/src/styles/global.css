@@ -1,0 +1,38 @@
+/*
+ * Globale Basis-Styles des Beauty-Studio-Projekts.
+ * Die Design-Tokens sind vorläufige Platzhalter und werden mit der Gestaltung festgelegt.
+ */
+
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 2rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
