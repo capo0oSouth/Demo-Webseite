@@ -1,0 +1,328 @@
+---
+import Icon from './Icon.astro';
+import { openingHours, site } from '../data/site';
+
+interface Props {
+  heading?: boolean;
+}
+
+const { heading = true } = Astro.props;
+const ordered = openingHours;
+---
+
+<div class="visit">
+  <div class="visit__info">
+    {heading && (
+      <div class="section-head">
+        <p class="eyebrow">Besuch uns</p>
+        <h2>
+          Mitten in Wil, <em class="accent">drei Minuten vom Bahnhof.</em>
+        </h2>
+      </div>
+    )}
+    <p class="status" data-open-status>
+      <span class="status__dot"></span>
+      <span data-open-text>Öffnungszeiten</span>
+    </p>
+    <dl class="hours" data-hours>
+      {ordered.map((d) => (
+        <div data-day={d.day}>
+          <dt>{d.label}</dt>
+          <dd>{d.open ? `${d.open} – ${d.close}` : 'geschlossen'}</dd>
+        </div>
+      ))}
+    </dl>
+    <ul class="contact">
+      <li>
+        <Icon name="pin" />
+        <span>
+          {site.address.street}, {`${site.address.zip} ${site.address.city}`}
+          <br />
+          <small>{site.address.floor}</small>
+        </span>
+      </li>
+      <li>
+        <Icon name="phone" />
+        <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
+      </li>
+      <li>
+        <Icon name="mail" />
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="map">
+    <svg
+      viewBox="0 0 520 440"
+      role="img"
+      aria-label="Lageplan: Maison Trois an der Oberen Bahnhofstrasse, drei Gehminuten vom Bahnhof Wil"
+    >
+      <rect width="520" height="440" fill="#F6E7E1"></rect>
+      <g fill="#FBF3EF">
+        <rect x="30" y="30" width="150" height="110" rx="10"></rect>
+        <rect x="210" y="30" width="120" height="80" rx="10"></rect>
+        <rect x="360" y="40" width="130" height="120" rx="10"></rect>
+        <rect x="30" y="180" width="110" height="140" rx="10"></rect>
+        <rect x="330" y="200" width="160" height="90" rx="10"></rect>
+        <rect x="40" y="350" width="170" height="70" rx="10"></rect>
+        <rect x="360" y="320" width="130" height="100" rx="10"></rect>
+      </g>
+      <path d="M0 162 C 140 150 300 176 520 168" stroke="#fff" stroke-width="22" fill="none"></path>
+      <path d="M198 0 C 205 120 170 250 250 440" stroke="#fff" stroke-width="26" fill="none"></path>
+      <path d="M0 330 C 120 318 260 310 520 300" stroke="#fff" stroke-width="16" fill="none"></path>
+      <path
+        d="M0 390 L 520 372"
+        stroke="#D8BDB3"
+        stroke-width="3"
+        stroke-dasharray="14 10"
+        fill="none"
+      ></path>
+      <text
+        x="40"
+        y="404"
+        font-size="12"
+        fill="#8B6C77"
+        font-family="Jost Variable, sans-serif"
+        letter-spacing="1.5"
+      >
+        BAHNLINIE
+      </text>
+      <g transform="translate(262 360)">
+        <rect x="-44" y="-16" width="88" height="32" rx="16" fill="#33182A"></rect>
+        <text
+          x="0"
+          y="5"
+          text-anchor="middle"
+          font-size="12"
+          fill="#FCF8F5"
+          font-family="Jost Variable, sans-serif"
+          letter-spacing="1"
+        >
+          Bahnhof Wil
+        </text>
+      </g>
+      <path
+        d="M262 342 C 250 300 226 250 214 206"
+        stroke="#BF9A5C"
+        stroke-width="2.5"
+        stroke-dasharray="4 7"
+        stroke-linecap="round"
+        fill="none"
+      ></path>
+      <text
+        x="220"
+        y="8"
+        font-size="12"
+        fill="#8B6C77"
+        font-family="Jost Variable, sans-serif"
+        transform="rotate(86 220 8)"
+        letter-spacing="1"
+      >
+        Obere Bahnhofstrasse
+      </text>
+      <g transform="translate(212 190)" class="map__pin">
+        <circle r="30" fill="#7A2E49" opacity="0.14"></circle>
+        <path
+          d="M0 8 C -14 -6 -16 -14 -16 -20 a16 16 0 0 1 32 0 c0 6 -2 14 -16 28Z"
+          fill="#7A2E49"
+        ></path>
+        <circle cy="-20" r="6" fill="#F1E3C6"></circle>
+      </g>
+      <g transform="translate(236 150)">
+        <rect x="0" y="-18" width="118" height="36" rx="18" fill="#fff"></rect>
+        <text
+          x="59"
+          y="5"
+          text-anchor="middle"
+          font-size="13"
+          fill="#33182A"
+          font-family="Fraunces Variable, serif"
+          font-style="italic"
+        >
+          Maison Trois
+        </text>
+      </g>
+      <text
+        x="300"
+        y="258"
+        font-size="11"
+        fill="#9C7A3F"
+        font-family="Jost Variable, sans-serif"
+        letter-spacing="1"
+      >
+        3 MIN. ZU FUSS
+      </text>
+    </svg>
+    <a
+      class="map__link btn btn--light btn--small"
+      href={site.mapsUrl}
+      target="_blank"
+      rel="noopener"
+    >
+      <Icon name="pin" /> Route planen
+    </a>
+  </div>
+</div>
+
+<script>
+  import { openingHours } from '../data/site';
+
+  const el = document.querySelector<HTMLElement>('[data-open-status]');
+  const text = document.querySelector<HTMLElement>('[data-open-text]');
+  if (el && text) {
+    const now = new Date();
+    const today = openingHours.find((o) => o.day === now.getDay());
+    const mins = now.getHours() * 60 + now.getMinutes();
+    const toM = (t: string) => Number(t.slice(0, 2)) * 60 + Number(t.slice(3));
+    document.querySelector(`[data-hours] [data-day="${now.getDay()}"]`)?.classList.add('is-today');
+    if (today?.open && today.close && mins >= toM(today.open) && mins < toM(today.close)) {
+      el.classList.add('is-open');
+      text.textContent = `Jetzt geöffnet · heute bis ${today.close} Uhr`;
+    } else {
+      // Nächste Öffnung suchen
+      for (let i = 0; i < 7; i++) {
+        const day = (now.getDay() + i) % 7;
+        const o = openingHours.find((x) => x.day === day);
+        if (!o?.open) continue;
+        if (i === 0 && mins >= toM(o.open)) continue;
+        const when = i === 0 ? 'heute' : i === 1 ? 'morgen' : o.label;
+        text.textContent = `Geschlossen · öffnet ${when} um ${o.open} Uhr`;
+        break;
+      }
+    }
+  }
+</script>
+
+<style>
+  .visit {
+    display: grid;
+    gap: clamp(2rem, 1.5rem + 3vw, 4rem);
+    align-items: center;
+  }
+
+  @media (min-width: 960px) {
+    .visit {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    }
+  }
+
+  .visit .section-head {
+    margin-bottom: 1.6rem;
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-pill);
+    background: var(--blush-100);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .status__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--rose-500);
+  }
+
+  :global(.status.is-open) .status__dot {
+    background: var(--success);
+    box-shadow: 0 0 0 4px rgba(63, 122, 92, 0.18);
+  }
+
+  .hours {
+    margin: 0 0 1.6rem;
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+
+  .hours div {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.7rem 0.2rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hours dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-soft);
+  }
+
+  .hours :global(.is-today) {
+    font-weight: 600;
+    color: var(--berry-700);
+  }
+
+  .hours :global(.is-today) dd {
+    color: var(--berry-700);
+  }
+
+  .contact {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .contact li {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+  }
+
+  .contact :global(svg) {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0.2rem;
+    color: var(--gold-600);
+    flex: none;
+  }
+
+  .contact a {
+    text-decoration: none;
+  }
+
+  .contact a:hover {
+    color: var(--berry-700);
+  }
+
+  .contact small {
+    color: var(--text-muted);
+  }
+
+  .map {
+    position: relative;
+    border-radius: var(--arch);
+    overflow: hidden;
+    box-shadow: var(--shadow-m);
+  }
+
+  .map svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .map__pin {
+    animation: bob 2.6s var(--ease-in-out) infinite;
+  }
+
+  @keyframes bob {
+    50% {
+      transform: translate(212px, 184px);
+    }
+  }
+
+  .map__link {
+    position: absolute;
+    right: 1.2rem;
+    bottom: 1.2rem;
+    box-shadow: var(--shadow-s);
+  }
+</style>

@@ -1,0 +1,416 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import PriceList from '../components/PriceList.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Illustration from '../components/Illustration.astro';
+import type { IllustrationName } from '../data/illustrations';
+import BrowStudio from '../components/visuals/BrowStudio.svelte';
+import { browFaq } from '../data/content';
+
+const finder = [
+  {
+    need: 'Meine Brauen sind hell oder unsichtbar.',
+    answer: 'Brow Styling mit Färben',
+    text: 'Die Farbe macht auch feine Härchen sichtbar – sofort mehr Rahmen fürs Gesicht.',
+    href: '/buchen?behandlung=brow-styling',
+    price: 49,
+  },
+  {
+    need: 'Ich habe lichte Stellen oder Lücken.',
+    answer: 'Henna Brows',
+    text: 'Henna färbt auch die Haut – Lücken werden optisch gefüllt, wie ein Hauch Puder.',
+    href: '/buchen?behandlung=brow-henna',
+    price: 69,
+  },
+  {
+    need: 'Meine Härchen wachsen widerspenstig oder nach unten.',
+    answer: 'Brow Lamination',
+    text: 'Die Härchen werden nach oben fixiert – volle, gebürstete Brauen für 6–8 Wochen.',
+    href: '/buchen?behandlung=brow-lamination',
+    price: 79,
+  },
+  {
+    need: 'Ich möchte mich morgens nie mehr schminken.',
+    answer: 'Permanent Make-up',
+    text: 'Microblading, Powder oder Combo Brows – hält 1–2 Jahre, inkl. Nachbehandlung.',
+    href: '/buchen?behandlung=brow-pmu',
+    price: 590,
+  },
+];
+
+const pmu = [
+  {
+    id: 'microblading',
+    title: 'Microblading',
+    price: 590,
+    text: 'Feine Härchenstriche, sehr natürlich. Ideal bei normaler bis trockener Haut.',
+  },
+  {
+    id: 'powder',
+    title: 'Powder Brows',
+    price: 620,
+    text: 'Weicher, pudriger Verlauf – vorne zart, hinten definiert. Hält auch bei öliger Haut.',
+  },
+  {
+    id: 'combo',
+    title: 'Combo Brows',
+    price: 650,
+    text: 'Härchen im vorderen Teil, Puder zum Ende hin – natürlich und doch definiert.',
+  },
+] as const;
+---
+
+<BaseLayout
+  title="Brows"
+  description="Brow Shaping, Färben, Henna Brows, Brow Lamination und Permanent Make-up in Wil – mit Vorher-Nachher-Vergleich und Preisen."
+>
+  <PageHero
+    eyebrow="Brows"
+    lead="Lea vermisst deine Brauen individuell und findet die Form, die dein Gesicht natürlich betont – mit Shaping, Färben, Henna, Lamination oder Permanent Make-up."
+    photo="brows-hero"
+    photoAlt="Frisch laminierte, gebürstete Augenbrauen in Nahaufnahme"
+    fallback="brows"
+    primary={{ href: '/buchen?kategorie=brows', label: 'Brows buchen' }}
+    secondary={{ href: '#explorer', label: 'Behandlungen vergleichen' }}
+    facts={[
+      { value: 'ab CHF 35.–', label: 'Brow Shaping' },
+      { value: '6–8 Wochen', label: 'hält eine Lamination' },
+      { value: '1–2 Jahre', label: 'hält Permanent Make-up' },
+    ]}
+  >
+    Brauen, die dein Gesicht <em class="accent">rahmen.</em>
+  </PageHero>
+
+  <!-- Explorer -->
+  <section class="section section--blush" id="explorer">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Brow-Explorer</p>
+        <h2>
+          Jede Behandlung, <em class="accent">sichtbar erklärt.</em>
+        </h2>
+        <p>
+          Wähle eine Behandlung und einen Farbton. Mit dem Regler vergleichst du die unbehandelte
+          Braue mit dem Ergebnis.
+        </p>
+      </div>
+      <div class="reveal">
+        <BrowStudio client:idle />
+      </div>
+    </div>
+  </section>
+
+  <!-- Finder -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Brow-Finder</p>
+        <h2>
+          Was brauchen <em class="accent">deine Brauen?</em>
+        </h2>
+        <p>Vier typische Wünsche – und die Behandlung, die wir dafür empfehlen.</p>
+      </div>
+      <div class="finder">
+        {finder.map((f, i) => (
+          <a class="finder__card reveal" style={`--delay: ${i * 90}`} href={f.href}>
+            <span class="finder__need">«{f.need}»</span>
+            <span class="finder__answer">
+              <Icon name="sparkle" /> {f.answer}
+            </span>
+            <span class="finder__text">{f.text}</span>
+            <span class="finder__foot">
+              <span>ab CHF {f.price}.–</span>
+              <span class="finder__cta">
+                Buchen <Icon name="arrow" />
+              </span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- PMU -->
+  <section class="section section--plum pmu-section">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Permanent Make-up</p>
+        <h2>
+          Aufwachen mit <em class="accent pmu-accent">perfekten Brauen.</em>
+        </h2>
+        <p class="pmu-lead">
+          Drei Techniken für unterschiedliche Hauttypen und Wünsche. Vor jedem PMU-Termin führt Lea
+          ein kostenloses Vorgespräch und einen Verträglichkeitstest durch. Die Nachbehandlung nach
+          6–8 Wochen ist immer inklusive.
+        </p>
+      </div>
+      <div class="pmu">
+        {pmu.map((p, i) => (
+          <article class="pmu__card reveal" style={`--delay: ${i * 110}`}>
+            <div class="pmu__visual">
+              <Illustration
+                name={`pmu-${p.id}` as IllustrationName}
+                alt={`Illustration: ${p.title}`}
+              />
+            </div>
+            <div class="pmu__body">
+              <div class="pmu__head">
+                <h3>{p.title}</h3>
+                <span>CHF {p.price}.–</span>
+              </div>
+              <p>{p.text}</p>
+              <a
+                href={`/buchen?behandlung=brow-pmu&technique=${p.id}`}
+                class="link-arrow pmu__link"
+              >
+                {p.title} buchen <Icon name="arrow" />
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Einblick -->
+  <section class="section section--tight">
+    <div class="container insight">
+      <figure class="insight__media reveal-mask">
+        <Photo
+          name="brows-work"
+          alt="Lea vermisst eine Augenbraue mit einem Brow-Mapping-Faden"
+          fallback="brows-henna"
+          sizes="(min-width: 960px) 50vw, 100vw"
+        />
+      </figure>
+      <div class="insight__text reveal">
+        <p class="eyebrow">Brow Mapping</p>
+        <h2>
+          Jede Braue wird <em class="accent">vermessen.</em>
+        </h2>
+        <p>
+          Bevor Lea zur Pinzette greift, vermisst sie mit einem feinen Mapping-Faden Anfang, Bogen
+          und Ende deiner Brauen – abgestimmt auf Augenabstand und Gesichtsform. So entstehen
+          symmetrische, natürliche Brauen, die zu dir gehören.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preise -->
+  <section class="section section--blush" id="preise">
+    <div class="container container--narrow">
+      <div class="section-head reveal">
+        <p class="eyebrow">Preise</p>
+        <h2>
+          Brows <em class="accent">Preisliste.</em>
+        </h2>
+        <p>Alle Preise in CHF, inklusive Beratung und Formen.</p>
+      </div>
+      <div class="reveal">
+        <PriceList category="brows" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <div class="section-head reveal">
+        <p class="eyebrow">Gut zu wissen</p>
+        <h2>
+          Häufige <em class="accent">Fragen.</em>
+        </h2>
+      </div>
+      <div class="reveal">
+        <Faq items={browFaq} />
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Zeit für deine Wow-Brauen." href="/buchen?kategorie=brows" label="Brows buchen" />
+</BaseLayout>
+
+<style>
+  .finder {
+    display: grid;
+    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  }
+
+  .finder__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 1.6rem;
+    border-radius: var(--radius-l);
+    border: 1px solid var(--line);
+    background: var(--white);
+    text-decoration: none;
+    transition:
+      transform 0.4s var(--ease-out),
+      box-shadow 0.4s var(--ease-out),
+      border-color 0.3s;
+  }
+
+  .finder__card:hover {
+    transform: translateY(-5px);
+    border-color: var(--rose-400);
+    box-shadow: var(--shadow-m);
+  }
+
+  .finder__need {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.25rem;
+    line-height: 1.35;
+  }
+
+  .finder__answer {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 500;
+    color: var(--berry-700);
+  }
+
+  .finder__answer :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--gold-500);
+  }
+
+  .finder__text {
+    font-size: 0.92rem;
+    color: var(--text-soft);
+  }
+
+  .finder__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .finder__foot > span:first-child {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+  }
+
+  .finder__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 500;
+    color: var(--berry-700);
+  }
+
+  .finder__cta :global(svg) {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.3s var(--ease-out);
+  }
+
+  .finder__card:hover .finder__cta :global(svg) {
+    transform: translateX(3px);
+  }
+
+  .pmu-section .eyebrow {
+    color: var(--gold-300);
+  }
+
+  .pmu-accent {
+    color: var(--rose-400) !important;
+  }
+
+  .pmu-lead {
+    color: rgba(251, 240, 236, 0.78) !important;
+  }
+
+  .pmu {
+    display: grid;
+    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  }
+
+  .pmu__card {
+    border-radius: var(--radius-l);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(241, 227, 198, 0.16);
+    overflow: hidden;
+  }
+
+  .pmu__visual {
+    aspect-ratio: 1.6;
+  }
+
+  .pmu__body {
+    display: grid;
+    gap: 0.6rem;
+    padding: 1.3rem 1.4rem 1.5rem;
+  }
+
+  .pmu__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .pmu__head h3 {
+    font-size: 1.5rem;
+  }
+
+  .pmu__head span {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--gold-300);
+  }
+
+  .pmu__body p {
+    color: rgba(251, 240, 236, 0.75);
+    font-size: 0.93rem;
+  }
+
+  .pmu__link {
+    color: var(--gold-300);
+    justify-self: start;
+  }
+
+  .insight {
+    display: grid;
+    gap: clamp(2rem, 1.5rem + 3vw, 4rem);
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .insight {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .insight__media {
+    margin: 0;
+    aspect-ratio: 1.3;
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    box-shadow: var(--shadow-m);
+  }
+
+  .insight__text {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .insight__text h2 {
+    font-size: var(--step-3);
+  }
+
+  .insight__text p:not(.eyebrow) {
+    color: var(--text-soft);
+  }
+</style>

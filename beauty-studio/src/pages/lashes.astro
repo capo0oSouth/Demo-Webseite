@@ -1,0 +1,455 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import PriceList from '../components/PriceList.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Illustration from '../components/Illustration.astro';
+import type { IllustrationName } from '../data/illustrations';
+import LashStudio from '../components/visuals/LashStudio.svelte';
+import { lashFaq } from '../data/content';
+import { treatmentById } from '../data/services';
+
+const looks = treatmentById['lash-neuset'].groups.find((g) => g.id === 'look')!.choices;
+const lookFor: Record<string, string> = {
+  natural: 'Für alle, die es dezent mögen – passt zu fast jeder Augenform.',
+  doll: 'Ideal für mandelförmige oder schmale Augen, die offener wirken sollen.',
+  cat: 'Schön bei runden Augen oder für einen verführerischen Abend-Look.',
+  squirrel: 'Hebt hängende Lider optisch an und wirkt frisch und wach.',
+};
+
+const process = [
+  {
+    title: 'Beratung & Mapping',
+    text: 'Wir schauen uns deine Augenform und Naturwimpern an und zeichnen dein Lash Mapping.',
+  },
+  {
+    title: 'Vorbereitung',
+    text: 'Die unteren Wimpern werden sanft abgedeckt, deine Naturwimpern gereinigt und entfettet.',
+  },
+  {
+    title: 'Entspannt liegen',
+    text: 'Du liegst bequem mit geschlossenen Augen – viele Kundinnen schlafen dabei ein.',
+  },
+  {
+    title: 'Finish & Pflege',
+    text: 'Zum Schluss bürsten wir alles in Form und geben dir Pflegetipps und eine Lash-Bürste mit.',
+  },
+];
+---
+
+<BaseLayout
+  title="Lashes"
+  description="Wimpernverlängerung Classic, Hybrid, Volume und Mega Volume, Lash Lifting und Wimpern färben in Wil – mit Look-Vergleich und Preisen."
+>
+  <PageHero
+    eyebrow="Lashes"
+    lead="Ob natürliche Classic-Wimpern, weiche Volume-Fächer oder ein Lash Lifting deiner eigenen Wimpern: Alessia stimmt jeden Look auf deine Augenform ab."
+    photo="lashes-hero"
+    photoAlt="Nahaufnahme eines Auges mit frisch gesetzten Volume-Wimpern"
+    fallback="lashes"
+    primary={{ href: '/buchen?kategorie=lashes', label: 'Lashes buchen' }}
+    secondary={{ href: '#vergleich', label: 'Looks vergleichen' }}
+    facts={[
+      { value: '4 Techniken', label: 'Classic bis Mega Volume' },
+      { value: '6–8 Wochen', label: 'hält ein Lash Lifting' },
+      { value: 'ab CHF 25.–', label: 'Wimpern färben' },
+    ]}
+  >
+    Wimpern mit <em class="accent">Wow-Effekt.</em>
+  </PageHero>
+
+  <!-- Extensions vs. Lifting -->
+  <section class="section section--blush">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Orientierung</p>
+        <h2>
+          Extensions oder <em class="accent">Lifting?</em>
+        </h2>
+        <p>Beides sorgt für einen wachen Blick – aber auf ganz unterschiedliche Weise.</p>
+      </div>
+      <div class="duo">
+        <article class="duo__card reveal">
+          <div class="duo__visual">
+            <Illustration name="lashes-hybrid-cc" alt="Illustration: Wimpernverlängerung Hybrid" />
+          </div>
+          <div class="duo__body">
+            <h3>Wimpernverlängerung</h3>
+            <p>
+              Feine Kunstwimpern werden einzeln auf deine Naturwimpern gesetzt. Dadurch gewinnst du{' '}
+              <strong>Länge, Dichte und Schwung</strong> – von natürlich bis dramatisch.
+            </p>
+            <ul>
+              <li>
+                <Icon name="check" /> Mascara überflüssig
+              </li>
+              <li>
+                <Icon name="check" /> Look frei wählbar
+              </li>
+              <li>
+                <Icon name="check" /> Auffüllen alle 2–3 Wochen
+              </li>
+            </ul>
+            <p class="duo__price">
+              ab CHF 150.– <span>Neuset</span>
+            </p>
+          </div>
+        </article>
+        <article class="duo__card reveal" style="--delay: 120">
+          <div class="duo__visual">
+            <Illustration name="lashes-lift-tinted" alt="Illustration: Lash Lifting mit Färben" />
+          </div>
+          <div class="duo__body">
+            <h3>Lash Lifting</h3>
+            <p>
+              Deine eigenen Wimpern werden ab der Wurzel <strong>nach oben geschwungen</strong> und
+              auf Wunsch gefärbt. Kein Kleber, keine Extensions – nur deine Wimpern, schöner.
+            </p>
+            <ul>
+              <li>
+                <Icon name="check" /> Pflegeleicht, kein Auffüllen
+              </li>
+              <li>
+                <Icon name="check" /> Hält 6–8 Wochen
+              </li>
+              <li>
+                <Icon name="check" /> Perfekt für Sport & Ferien
+              </li>
+            </ul>
+            <p class="duo__price">
+              ab CHF 89.– <span>inkl. Pflege</span>
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vergleich -->
+  <section class="section" id="vergleich">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Look-Vergleich</p>
+        <h2>
+          Sieh den Unterschied – <em class="accent">vorher und nachher.</em>
+        </h2>
+        <p>
+          Ziehe den Regler, um deine natürlichen Wimpern mit dem gewählten Look zu vergleichen.
+          Technik, Look, Schwung und Länge verändern die Vorschau sofort.
+        </p>
+      </div>
+      <div class="reveal">
+        <LashStudio client:idle />
+      </div>
+    </div>
+  </section>
+
+  <!-- Looks -->
+  <section class="section section--blush">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <p class="eyebrow">Lash Mapping</p>
+        <h2>
+          Vier Looks, <em class="accent">vier Wirkungen.</em>
+        </h2>
+        <p>
+          Wo die längsten Wimpern sitzen, verändert die Form deines Auges. Hier alle Looks mit
+          Classic-Technik.
+        </p>
+      </div>
+      <div class="looks">
+        {looks.map((l, i) => (
+          <article class="look reveal" style={`--delay: ${i * 90}`}>
+            <div class="look__visual">
+              <Illustration
+                name={`lash-look-${l.id}` as IllustrationName}
+                alt={`Illustration: Look ${l.label}`}
+              />
+            </div>
+            <div class="look__body">
+              <h3>{l.label}</h3>
+              <p>{l.hint}</p>
+              <p class="look__for">{lookFor[l.id]}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Ablauf -->
+  <section class="section">
+    <div class="container process">
+      <div class="process__media reveal-mask">
+        <Photo
+          name="lashes-work"
+          alt="Alessia setzt Wimpernextensions bei einer entspannt liegenden Kundin"
+          fallback="lashes-classic"
+          sizes="(min-width: 960px) 45vw, 100vw"
+        />
+      </div>
+      <div>
+        <div class="section-head reveal">
+          <p class="eyebrow">Dein Termin</p>
+          <h2>
+            So läuft dein <em class="accent">Lash-Termin</em> ab.
+          </h2>
+        </div>
+        <ol class="process__list">
+          {process.map((p, i) => (
+            <li class="reveal" style={`--delay: ${i * 90}`}>
+              <span class="process__num">{i + 1}</span>
+              <div>
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <p class="process__note reveal">
+          <Icon name="info" /> Bitte komm ohne Augen-Make-up und ohne Kontaktlinsen zum Termin.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preise -->
+  <section class="section section--blush" id="preise">
+    <div class="container container--narrow">
+      <div class="section-head reveal">
+        <p class="eyebrow">Preise</p>
+        <h2>
+          Lashes <em class="accent">Preisliste.</em>
+        </h2>
+        <p>
+          Neuset, Auffüllen, Lifting und Färben – alle Preise in CHF. Look, Schwung und Länge sind
+          immer inklusive.
+        </p>
+      </div>
+      <div class="reveal">
+        <PriceList category="lashes" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <div class="section-head reveal">
+        <p class="eyebrow">Gut zu wissen</p>
+        <h2>
+          Häufige <em class="accent">Fragen.</em>
+        </h2>
+      </div>
+      <div class="reveal">
+        <Faq items={lashFaq} />
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    title="Bereit für deinen Augenaufschlag?"
+    href="/buchen?kategorie=lashes"
+    label="Lashes buchen"
+  />
+</BaseLayout>
+
+<style>
+  .duo {
+    display: grid;
+    gap: 1.4rem;
+  }
+
+  @media (min-width: 860px) {
+    .duo {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .duo__card {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-l);
+    background: var(--white);
+    box-shadow: var(--shadow-s);
+    overflow: hidden;
+  }
+
+  .duo__visual {
+    aspect-ratio: 1.6;
+  }
+
+  .duo__body {
+    display: grid;
+    gap: 0.8rem;
+    padding: 1.5rem 1.6rem 1.7rem;
+  }
+
+  .duo__body h3 {
+    font-size: 1.7rem;
+  }
+
+  .duo__body p {
+    color: var(--text-soft);
+  }
+
+  .duo__body strong {
+    color: var(--plum-900);
+    font-weight: 500;
+  }
+
+  .duo__body ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .duo__body li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.93rem;
+  }
+
+  .duo__body li :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--gold-600);
+  }
+
+  .duo__price {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--plum-900) !important;
+  }
+
+  .duo__price span {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  .looks {
+    display: grid;
+    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  }
+
+  .look {
+    border-radius: var(--radius-m);
+    background: var(--white);
+    box-shadow: var(--shadow-s);
+    overflow: hidden;
+  }
+
+  .look__visual {
+    aspect-ratio: 1.6;
+  }
+
+  .look__body {
+    display: grid;
+    gap: 0.4rem;
+    padding: 1.1rem 1.2rem 1.3rem;
+  }
+
+  .look__body h3 {
+    font-size: 1.4rem;
+  }
+
+  .look__body p {
+    font-size: 0.92rem;
+    color: var(--text-soft);
+  }
+
+  .look__for {
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--text-muted) !important;
+    font-size: 0.85rem !important;
+  }
+
+  .process {
+    display: grid;
+    gap: clamp(2rem, 1.5rem + 3vw, 4rem);
+    align-items: center;
+  }
+
+  @media (min-width: 960px) {
+    .process {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+  }
+
+  .process__media {
+    aspect-ratio: 4 / 5;
+    border-radius: var(--arch);
+    overflow: hidden;
+    box-shadow: var(--shadow-m);
+  }
+
+  .process__media.reveal-mask {
+    clip-path: inset(100% 0 0 0 round 999px 999px 32px 32px);
+  }
+
+  .process__media.reveal-mask.is-visible {
+    clip-path: inset(0 0 0 0 round 999px 999px 32px 32px);
+  }
+
+  .process__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.3rem;
+  }
+
+  .process__list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+  }
+
+  .process__num {
+    width: 2.6rem;
+    height: 2.6rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--gold-400);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--gold-600);
+  }
+
+  .process__list h3 {
+    font-size: 1.25rem;
+  }
+
+  .process__list p {
+    color: var(--text-soft);
+  }
+
+  .process__note {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    margin-top: 1.6rem;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    background: var(--cream);
+    font-size: 0.9rem;
+    color: var(--text-soft);
+  }
+
+  .process__note :global(svg) {
+    width: 1.2rem;
+    height: 1.2rem;
+    flex: none;
+    color: var(--gold-600);
+  }
+</style>

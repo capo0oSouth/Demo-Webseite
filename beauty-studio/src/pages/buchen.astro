@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BookingApp from '../components/booking/BookingApp.svelte';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title="Termin online buchen"
+  description={`Buche deine Nails-, Lashes- oder Brows-Behandlung bei ${site.name} in Wil – visuell konfigurieren, Preis sofort sehen, Wunschtermin wählen.`}
+>
+  <section class="booking-page">
+    <div class="booking-page__intro container">
+      <p class="eyebrow">Online-Termin</p>
+      <h1>
+        Dein Termin, <em class="accent">ganz nach deinem Geschmack.</em>
+      </h1>
+    </div>
+    <div class="container">
+      <noscript>
+        <p class="noscript">
+          Für die Online-Buchung wird JavaScript benötigt. Du erreichst uns auch telefonisch unter
+          <a href={`tel:${site.phoneHref}`}>{site.phone}</a>.
+        </p>
+      </noscript>
+      <BookingApp client:load />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .booking-page {
+    padding-block: clamp(2rem, 1.5rem + 2vw, 3.5rem) clamp(4rem, 3rem + 4vw, 7rem);
+    background:
+      radial-gradient(60% 40% at 85% 0%, rgba(239, 207, 198, 0.55), transparent 70%),
+      var(--porcelain);
+  }
+
+  .booking-page__intro {
+    display: grid;
+    gap: 0.8rem;
+    margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+
+  .noscript {
+    margin-bottom: 2rem;
+    padding: 1rem 1.2rem;
+    border-radius: 14px;
+    background: var(--gold-200);
+  }
+
+  .booking-page__intro h1 {
+    font-size: var(--step-4);
+    max-width: 20ch;
+  }
+</style>

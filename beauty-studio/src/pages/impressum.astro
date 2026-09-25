@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout title="Impressum" description="Impressum der Demo-Website von Maison Trois, Wil SG.">
+  <PageHero
+    eyebrow="Impressum"
+    lead="Angaben gemäss Schweizer Recht. Bitte beachte: Diese Website ist eine Demo, das Studio ist fiktiv."
+  >
+    Impressum
+  </PageHero>
+  <section class="section section--tight">
+    <div class="container container--narrow prose legal">
+      <p class="legal__note">
+        <strong>Demo-Hinweis:</strong> Maison Trois ist ein fiktives Beauty-Studio. Diese Website
+        wurde als Demonstrationsprojekt erstellt. Namen, Personen, Adresse und Kontaktdaten sind
+        frei erfunden.
+      </p>
+      <h2>Betreiberin</h2>
+      <p>
+        {site.name} GmbH (fiktiv)
+        <br />
+        {site.address.street}
+        <br />
+        {site.address.zip} {site.address.city}
+        <br />
+        Schweiz
+      </p>
+      <h2>Kontakt</h2>
+      <p>
+        Telefon: {site.phone}
+        <br />
+        E-Mail: {site.email}
+      </p>
+      <h2>Vertretungsberechtigte Personen</h2>
+      <p>Noemi Egger, Alessia Keller, Lea Zünd (Geschäftsführerinnen)</p>
+      <h2>Handelsregister</h2>
+      <p>
+        Fiktiver Eintrag – für die Demo nicht im Handelsregister des Kantons St. Gallen eingetragen.
+      </p>
+      <h2>Haftungsausschluss</h2>
+      <p>
+        Die Inhalte dieser Website wurden mit Sorgfalt erstellt. Für die Richtigkeit,
+        Vollständigkeit und Aktualität der Inhalte kann keine Gewähr übernommen werden. Preise und
+        Angebote dienen der Veranschaulichung.
+      </p>
+      <h2>Bildnachweis & Gestaltung</h2>
+      <p>
+        Illustrationen und Visualisierungen: eigene Gestaltung. Fotos: lizenzfreie Stockbilder,
+        siehe Bildnachweise im Projekt.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal {
+    max-width: 760px;
+  }
+
+  .legal__note {
+    padding: 1rem 1.2rem;
+    border-radius: 14px;
+    background: var(--gold-200);
+    color: #574120 !important;
+  }
+</style>
