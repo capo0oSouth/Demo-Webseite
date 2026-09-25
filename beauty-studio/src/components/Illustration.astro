@@ -1,0 +1,40 @@
+---
+import { illustrations, type IllustrationName } from '../data/illustrations';
+
+interface Props {
+  name: IllustrationName;
+  alt: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  fit?: 'cover' | 'contain';
+}
+
+const { name, alt, class: className, loading = 'lazy', fit = 'cover' } = Astro.props;
+const isNail = illustrations[name].kind === 'nail';
+---
+
+<img
+  src={`/visuals/${name}.svg`}
+  alt={alt}
+  loading={loading}
+  decoding="async"
+  width={isNail ? 360 : 464}
+  height={isNail ? 360 : 290}
+  class:list={['illustration', `illustration--${fit}`, className]}
+/>
+
+<style>
+  .illustration {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .illustration--cover {
+    object-fit: cover;
+  }
+
+  .illustration--contain {
+    object-fit: contain;
+  }
+</style>

@@ -135,21 +135,18 @@ function strandPath(s: Strand) {
     y += Math.sin(a) * step;
     pts.push([x, y]);
   }
-  // Verjüngte Kontur (Seide läuft spitz aus)
-  const left: string[] = [];
-  const right: string[] = [];
-  for (let k = 0; k <= n; k++) {
-    const p = pts[k];
-    const q = pts[Math.min(n, k + 1)];
-    const r = pts[Math.max(0, k - 1)];
-    const dx = q[0] - r[0];
-    const dy = q[1] - r[1];
-    const l = Math.hypot(dx, dy) || 1;
-    const hw = s.width * Math.pow(1 - k / n, 0.9) * 0.5 + 0.04;
-    left.push(`${fmt(p[0] - (dy / l) * hw)} ${fmt(p[1] + (dx / l) * hw)}`);
-    right.push(`${fmt(p[0] + (dy / l) * hw)} ${fmt(p[1] - (dx / l) * hw)}`);
-  }
-  return `M${left.join('L')}L${right.reverse().join('L')}Z`;
+  // Verjüngte Kontur als quadratische Bézier-Sichel (kompakt, läuft spitz aus)
+  const p0 = pts[0];
+  const p2 = pts[n];
+  const mid: Pt = [(pts[3][0] + pts[4][0]) / 2, (pts[3][1] + pts[4][1]) / 2];
+  const c: Pt = [2 * mid[0] - (p0[0] + p2[0]) / 2, 2 * mid[1] - (p0[1] + p2[1]) / 2];
+  const dx = pts[1][0] - p0[0];
+  const dy = pts[1][1] - p0[1];
+  const l = Math.hypot(dx, dy) || 1;
+  const nx = -dy / l;
+  const ny = dx / l;
+  const hw = s.width * 0.5 + 0.04;
+  return `M${fmt(p0[0] + nx * hw)} ${fmt(p0[1] + ny * hw)}Q${fmt(c[0] + nx * hw * 0.5)} ${fmt(c[1] + ny * hw * 0.5)} ${fmt(p2[0])} ${fmt(p2[1])}Q${fmt(c[0] - nx * hw * 0.5)} ${fmt(c[1] - ny * hw * 0.5)} ${fmt(p0[0] - nx * hw)} ${fmt(p0[1] - ny * hw)}Z`;
 }
 
 const techniques: Record<
@@ -374,7 +371,8 @@ export interface BrowRender {
   fine: string;
   strays: string;
   strokes: string;
-  stipple: { x: number; y: number; r: number; o: number }[];
+  /** Puderpunkte, nach Deckkraft gruppiert: [Deckkraft, Pfad]. */
+  stipple: [number, string][];
   hairColor: string;
   fineOpacity: number;
   hairOpacity: number;
@@ -422,17 +420,22 @@ export function renderBrows(p: BrowParams, seed = 11): BrowRender {
       out.push(
         hairPath(
           { x, y, angle, len, width: opts.width * (0.8 + r() * 0.4) },
-          (r() - 0.3) * 2.2 + opts.bend,
+          laminated ? (r() - 0.5) * 6 + 1.4 : (r() - 0.3) * 2.2 + opts.bend,
         ),
       );
       placed++;
     }
   };
 
-  const hairCount = natural ? 190 : laminated ? 270 : p.mode === 'shaping' ? 205 : 235;
-  place(hairCount, hairs, { len: 19, width: 1.7, jitter: natural ? 24 : 12, bend: 0.8 });
+  const hairCount = natural ? 240 : laminated ? 340 : p.mode === 'shaping' ? 260 : 300;
+  place(hairCount, hairs, {
+    len: 19,
+    width: 1.2,
+    jitter: natural ? 24 : laminated ? 16 : 12,
+    bend: 0.8,
+  });
   // Feine, helle Härchen – nach dem Färben sichtbar
-  place(150, fine, { len: 13, width: 1, jitter: 20, bend: 0.5 });
+  place(190, fine, { len: 13, width: 0.75, jitter: 20, bend: 0.5 });
 
   if (natural) {
     // Streuhärchen ausserhalb der Form (unter der Braue, zwischen den Brauen, über dem Bogen)
@@ -459,7 +462,7 @@ export function renderBrows(p: BrowParams, seed = 11): BrowRender {
     }
   }
 
-  const stipple: BrowRender['stipple'] = [];
+  const dots: { x: number; y: number; o: number }[] = [];
   if (p.mode === 'pmu') {
     const tech = p.pmu ?? 'microblading';
     if (tech === 'microblading' || tech === 'combo') {
@@ -485,7 +488,7 @@ export function renderBrows(p: BrowParams, seed = 11): BrowRender {
               y,
               angle: angleAt(u, v) + (r() - 0.5) * 6,
               len: (16 + r() * 7) * tailTaper,
-              width: 1.15,
+              width: 0.95,
             },
             1.2,
           ),
@@ -495,7 +498,7 @@ export function renderBrows(p: BrowParams, seed = 11): BrowRender {
     }
     if (tech === 'powder' || tech === 'combo') {
       let guard = 0;
-      while (stipple.length < 1300 && guard < 20000) {
+      while (dots.length < 1300 && guard < 20000) {
         guard++;
         const x = lerp(X_HEAD, X_TAIL, r());
         const yt = edgeY(topPts, x);
@@ -507,10 +510,21 @@ export function renderBrows(p: BrowParams, seed = 11): BrowRender {
         // Ombré: vorne heller, zum Ende hin dichter
         if (r() > 0.15 + smooth(0, 0.55, u) * 0.85) continue;
         const y = lerp(yb + 1, yt - 1, r());
-        stipple.push({ x, y, r: 0.5 + r() * 0.8, o: 0.25 + r() * 0.45 });
+        dots.push({ x, y, o: 0.25 + r() * 0.45 });
       }
     }
   }
+
+  const buckets: [number, string[]][] = [
+    [0.3, []],
+    [0.48, []],
+    [0.66, []],
+  ];
+  for (const d of dots)
+    buckets[d.o < 0.4 ? 0 : d.o < 0.55 ? 1 : 2][1].push(`M${fmt(d.x)} ${fmt(d.y)}h0`);
+  const stipple: [number, string][] = buckets
+    .filter(([, b]) => b.length)
+    .map(([o, b]) => [o, b.join('')]);
 
   const colored = p.tinted || p.mode === 'tint' || p.mode === 'henna' || p.mode === 'pmu';
   return {

@@ -128,14 +128,23 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
     top: 0;
     z-index: 100;
     height: var(--header-h);
-    background: rgba(252, 248, 245, 0.82);
-    backdrop-filter: saturate(1.4) blur(14px);
-    -webkit-backdrop-filter: saturate(1.4) blur(14px);
     border-bottom: 1px solid transparent;
     transition:
       border-color 0.3s,
-      box-shadow 0.3s,
-      background-color 0.3s;
+      box-shadow 0.3s;
+  }
+
+  /* Hintergrund mit Weichzeichner als Pseudo-Element: backdrop-filter direkt am Header würde
+     ihn zum Bezugsrahmen für das fixierte Mobile-Menü machen. */
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(252, 248, 245, 0.82);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    transition: background-color 0.3s;
   }
 
   .site-header.is-scrolled {
@@ -143,7 +152,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
     box-shadow: 0 10px 30px -24px rgba(51, 24, 42, 0.35);
   }
 
-  .site-header.menu-open {
+  .site-header.menu-open::before {
     background: var(--porcelain);
   }
 

@@ -6,7 +6,8 @@ import Photo from '../components/Photo.astro';
 import PriceList from '../components/PriceList.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
-import EyeVisual from '../components/visuals/EyeVisual.svelte';
+import Illustration from '../components/Illustration.astro';
+import type { IllustrationName } from '../data/illustrations';
 import LashStudio from '../components/visuals/LashStudio.svelte';
 import { lashFaq } from '../data/content';
 import { treatmentById } from '../data/services';
@@ -73,15 +74,7 @@ const process = [
       <div class="duo">
         <article class="duo__card reveal">
           <div class="duo__visual">
-            <EyeVisual
-              focus="lashes"
-              lashMode="extension"
-              technique="hybrid"
-              look="natural"
-              curl="cc"
-              instant
-              label="Wimpernverlängerung Hybrid"
-            />
+            <Illustration name="lashes-hybrid-cc" alt="Illustration: Wimpernverlängerung Hybrid" />
           </div>
           <div class="duo__body">
             <h3>Wimpernverlängerung</h3>
@@ -107,13 +100,7 @@ const process = [
         </article>
         <article class="duo__card reveal" style="--delay: 120">
           <div class="duo__visual">
-            <EyeVisual
-              focus="lashes"
-              lashMode="lift"
-              lashTinted
-              instant
-              label="Lash Lifting mit Färben"
-            />
+            <Illustration name="lashes-lift-tinted" alt="Illustration: Lash Lifting mit Färben" />
           </div>
           <div class="duo__body">
             <h3>Lash Lifting</h3>
@@ -155,7 +142,7 @@ const process = [
         </p>
       </div>
       <div class="reveal">
-        <LashStudio client:visible />
+        <LashStudio client:idle />
       </div>
     </div>
   </section>
@@ -177,15 +164,9 @@ const process = [
         {looks.map((l, i) => (
           <article class="look reveal" style={`--delay: ${i * 90}`}>
             <div class="look__visual">
-              <EyeVisual
-                focus="lashes"
-                lashMode="extension"
-                technique="classic"
-                look={l.id}
-                lashLength="long"
-                curl="cc"
-                instant
-                label={`Look ${l.label}`}
+              <Illustration
+                name={`lash-look-${l.id}` as IllustrationName}
+                alt={`Illustration: Look ${l.label}`}
               />
             </div>
             <div class="look__body">

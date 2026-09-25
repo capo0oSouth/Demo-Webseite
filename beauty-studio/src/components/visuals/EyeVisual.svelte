@@ -119,6 +119,7 @@
 </script>
 
 <svg
+  xmlns="http://www.w3.org/2000/svg"
   class="eye-visual"
   viewBox={vb}
   role="img"
@@ -215,11 +216,9 @@
         {/if}
         {#if brows.powder !== 'none'}
           <path d={browShape} fill="url(#{uid}-powder)" filter="url(#{uid}-soft)" />
-          <g fill={browColor}>
-            {#each brows.stipple as d, i (i)}
-              <circle cx={d.x} cy={d.y} r={d.r} opacity={d.o} />
-            {/each}
-          </g>
+          {#each brows.stipple as [opacity, d] (opacity)}
+            <path {d} stroke={browColor} stroke-width="1.5" stroke-linecap="round" {opacity} />
+          {/each}
         {/if}
         <path
           d={brows.fine}

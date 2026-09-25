@@ -7,7 +7,7 @@ import { reviews } from '../data/content';
   <div class="reviews__track" data-track tabindex="0" aria-label="Kundinnenstimmen" role="region">
     {reviews.map((r) => (
       <figure class="review">
-        <div class="review__stars" aria-label="5 von 5 Sternen">
+        <div class="review__stars" role="img" aria-label="5 von 5 Sternen">
           {[1, 2, 3, 4, 5].map(() => (
             <Icon name="star" />
           ))}

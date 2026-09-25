@@ -1,11 +1,25 @@
-# Beauty Studio – Demo-Website
+# Maison Trois – Beauty-Studio-Demo
 
-Eigenständiges Webprojekt für die Demo-Website eines Beauty-Studios, gebaut mit
-[Astro](https://astro.build) und TypeScript.
+Demo-Website für **Maison Trois**, ein fiktives Beauty-Studio für Nails, Lashes und Brows in
+Wil SG, geführt von drei Inhaberinnen. Gebaut mit [Astro](https://astro.build), Svelte 5 und
+TypeScript.
 
-Das Projekt liegt zwar im Repository `Demo-Webseite`, ist aber **technisch vollständig
-unabhängig** von allen anderen Websites darin: eigene Abhängigkeiten, eigene Konfiguration,
-eigene Assets, eigener Build und eigenes Deployment.
+Das Projekt liegt im Repository `Demo-Webseite`, ist aber **technisch vollständig unabhängig**
+von allen anderen Websites darin: eigene Abhängigkeiten, eigene Konfiguration, eigene Assets,
+eigener Build und eigenes Deployment.
+
+## Highlights
+
+- **Interaktives Buchungssystem** (`/buchen`) in sieben Schritten: Kategorie → Behandlung →
+  Gestalten → Artist → Termin → Angaben → Übersicht → Demo-Bestätigung. Mit Live-Preis,
+  mitlaufender Zusammenfassung, Browser-Zurück-Taste und mobiler Preisleiste.
+- **Visuelle Konfiguratoren:** parametrische SVG-Nägel (7 Formen × 5 Längen, Farben, French,
+  Babyboomer, Chrome, Cat Eye, Glitzer, Nail Art) sowie prozedural gezeichnete Wimpern (Classic,
+  Hybrid, Volume, Mega Volume, Looks, Curl, Länge, Lifting) und Brauen (Shaping, Färben, Henna,
+  Lamination, Microblading, Powder, Combo) – inklusive Vorher-Nachher-Vergleich.
+- **Realistische Terminlogik:** Öffnungszeiten, Feiertage im Kanton St. Gallen, Arbeitstage der
+  Inhaberinnen, simulierte Auslastung und Slots passend zur Behandlungsdauer.
+- **Demo-sicher:** Buchung, Kontaktformular und Gutschein-Anfrage übertragen keine Daten.
 
 ## Voraussetzungen
 
@@ -21,14 +35,14 @@ cd beauty-studio
 npm install
 ```
 
-| Befehl                 | Beschreibung                                                  |
-| ---------------------- | ------------------------------------------------------------- |
-| `npm run dev`          | Entwicklungsserver unter <http://localhost:4400>              |
-| `npm run build`        | Typprüfung (`astro check`) und Produktions-Build nach `dist/` |
-| `npm run preview`      | Lokale Vorschau des Produktions-Builds unter Port 4400        |
-| `npm run check`        | Nur Typ- und Template-Prüfung                                 |
-| `npm run format`       | Code mit Prettier formatieren                                 |
-| `npm run format:check` | Formatierung prüfen, ohne Dateien zu ändern                   |
+| Befehl                 | Beschreibung                                                     |
+| ---------------------- | ---------------------------------------------------------------- |
+| `npm run dev`          | Entwicklungsserver unter <http://localhost:4400>                 |
+| `npm run build`        | Typprüfung (`astro check`, `svelte-check`) und Produktions-Build |
+| `npm run preview`      | Lokale Vorschau des Produktions-Builds unter Port 4400           |
+| `npm run check`        | Nur Typ- und Template-Prüfung                                    |
+| `npm run format`       | Code mit Prettier formatieren                                    |
+| `npm run format:check` | Formatierung prüfen, ohne Dateien zu ändern                      |
 
 Hinweis: Wird der Dev- oder Preview-Server ohne interaktives Terminal gestartet (z. B. aus
 einem Skript), läuft er im Hintergrund weiter. Beenden mit `npx astro dev stop` bzw.
@@ -38,21 +52,35 @@ einem Skript), läuft er im Hintergrund weiter. Beenden mit `npx astro dev stop`
 
 ```text
 beauty-studio/
-├── public/              # Statische Dateien, unverändert ausgeliefert (Favicon usw.)
+├── public/                     # Favicon
 ├── src/
-│   ├── assets/          # Bilder und Medien, die von Astro optimiert werden
-│   ├── components/      # Wiederverwendbare UI-Komponenten
-│   ├── layouts/         # Seitenlayouts (BaseLayout.astro)
-│   ├── pages/           # Seiten – jede Datei wird zu einer Route
-│   └── styles/          # Globale Styles und Design-Tokens
-├── astro.config.mjs     # Astro-/Vite-Konfiguration
-├── tsconfig.json        # TypeScript-Konfiguration (strict)
-└── package.json         # Eigene Abhängigkeiten und Skripte
+│   ├── assets/photos/          # Fotos (optional, siehe PHOTOS.md)
+│   ├── components/
+│   │   ├── booking/            # Buchungssystem (Svelte): Schritte, Zustand, Zusammenfassung
+│   │   ├── visuals/            # Nagel-, Augen- und Brauen-Visualisierungen, Guides
+│   │   └── *.astro             # Header, Footer, Preisliste, FAQ, Bewertungen …
+│   ├── data/                   # Leistungen & Preise, Team, Studio-Daten, Texte
+│   ├── lib/                    # Preis-, Termin- und Validierungslogik, Geometrie
+│   ├── layouts/                # Basislayout
+│   ├── pages/                  # Seiten (inkl. /visuals/*.svg für statische Illustrationen)
+│   └── styles/                 # Designsystem (Farben, Typografie, Komponenten)
+├── PHOTOS.md                   # Bildplätze, Anforderungen und Bildnachweise
+└── package.json
 ```
+
+**Eine Quelle für alle Preise:** `src/data/services.ts` enthält alle Behandlungen, Varianten,
+Aufpreise, Extras und Dauern. Preisliste, Leistungsseiten, Guides und Buchungssystem lesen
+daraus – Bezeichnungen und Preise sind dadurch überall identisch.
+
+## Fotos
+
+Fotos werden automatisch eingebunden, sobald sie unter `src/assets/photos/<name>.jpg` liegen –
+Namen, Formate und fachliche Anforderungen stehen in [PHOTOS.md](./PHOTOS.md). Ohne Foto zeigt
+jede Bildfläche eine gestaltete Illustration.
 
 ## Trennung von anderen Projekten im Repository
 
-- Alle Dateien dieses Projekts liegen ausschließlich in `beauty-studio/`.
+- Alle Dateien dieses Projekts liegen ausschliesslich in `beauty-studio/`.
 - Es gibt keine gemeinsamen Komponenten, Styles, Assets oder Konfigurationen mit anderen
   Websites im Repository und kein Workspace-Setup im Wurzelverzeichnis.
 - `node_modules/`, `package-lock.json`, `.gitignore`, `.editorconfig` (`root = true`) und die
@@ -75,4 +103,4 @@ Cloudflare Pages) folgende Einstellungen verwenden:
 | Node-Version            | 22              |
 
 Vor dem ersten Deployment in `astro.config.mjs` die Option `site` auf die endgültige Domain
-setzen.
+setzen. Die Seiten enthalten `noindex`, da es sich um eine Demo eines fiktiven Studios handelt.

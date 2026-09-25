@@ -6,7 +6,7 @@ import Photo from '../components/Photo.astro';
 import PriceList from '../components/PriceList.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
-import NailVisual from '../components/visuals/NailVisual.svelte';
+import Illustration from '../components/Illustration.astro';
 import NailStudio from '../components/visuals/NailStudio.svelte';
 import { nailFaq } from '../data/content';
 import { treatmentById } from '../data/services';
@@ -15,7 +15,7 @@ const compare = [
   {
     id: 'gel-lack',
     title: 'Gel-Lack',
-    visual: { shape: 'squoval', length: 'natural', color: '#D6969C' },
+    visual: 'compare-gel-lack' as const,
     what: 'Farbe auf deinem Naturnagel',
     length: 'Deine eigene Länge',
     hold: '2–3 Wochen',
@@ -24,7 +24,7 @@ const compare = [
   {
     id: 'biab',
     title: 'BIAB',
-    visual: { shape: 'oval', length: 'natural', color: '#F0CFCC' },
+    visual: 'compare-biab' as const,
     what: 'Aufbau-Gel, das den Naturnagel stärkt',
     length: 'Eigene Länge, leicht verlängerbar',
     hold: '3–4 Wochen',
@@ -33,7 +33,7 @@ const compare = [
   {
     id: 'gel-neuset',
     title: 'Gel-Modellage',
-    visual: { shape: 'almond', length: 'long', color: '#F3ECE6' },
+    visual: 'compare-modellage' as const,
     what: 'Künstliche Verlängerung mit Gel',
     length: 'Kurz bis extra lang',
     hold: 'Auffüllen alle 3–4 Wochen',
@@ -42,7 +42,7 @@ const compare = [
   {
     id: 'manicure',
     title: 'Maniküre',
-    visual: { shape: 'round', length: 'natural', finish: 'natural' },
+    visual: 'compare-manicure' as const,
     what: 'Pflege ohne Gel, auf Wunsch mit Lack',
     length: 'Deine eigene Länge',
     hold: 'Lack ca. 1 Woche',
@@ -54,37 +54,37 @@ const finishes = [
   {
     name: 'Uni',
     price: 'inklusive',
-    visual: { color: '#A26B7A' },
+    visual: 'finish-uni' as const,
     text: 'Eine Farbe, deckend und hochglänzend. Zeitlos und immer elegant.',
   },
   {
     name: 'French',
     price: '+ CHF 15.–',
-    visual: { color: '#F3ECE6', finish: 'french' },
+    visual: 'finish-french' as const,
     text: 'Zarte Nude-Basis und eine feine Spitze – klassisch weiss oder farbig.',
   },
   {
     name: 'Babyboomer',
     price: '+ CHF 15.–',
-    visual: { color: '#F3ECE6', finish: 'babyboomer' },
+    visual: 'finish-babyboomer' as const,
     text: 'Weicher Verlauf von Nude zur hellen Spitze – die moderne French.',
   },
   {
     name: 'Chrome',
     price: '+ CHF 10.–',
-    visual: { color: '#C5B5DC', finish: 'chrome' },
+    visual: 'finish-chrome' as const,
     text: 'Spiegelnder Metallic-Glanz über deiner Farbe, z. B. als Glazed-Donut-Look.',
   },
   {
     name: 'Cat Eye',
     price: '+ CHF 10.–',
-    visual: { color: '#5A1426', finish: 'cateye' },
+    visual: 'finish-cateye' as const,
     text: 'Ein magnetischer Schimmerstreifen, der sich mit dem Licht bewegt.',
   },
   {
     name: 'Glitzer',
     price: '+ CHF 10.–',
-    visual: { color: '#F0CFCC', finish: 'glitter' },
+    visual: 'finish-glitter' as const,
     text: 'Feiner Glitzer, eingearbeitet in deine Farbe – dezent oder festlich.',
   },
 ];
@@ -144,7 +144,7 @@ const care = [
         {compare.map((c, i) => (
           <article class="compare__card reveal" style={`--delay: ${i * 90}`}>
             <div class="compare__visual">
-              <NailVisual {...c.visual} instant label={`Beispiel ${c.title}`} />
+              <Illustration name={c.visual} alt={`Beispiel ${c.title}`} fit="contain" />
             </div>
             <div class="compare__body">
               <h3>{c.title}</h3>
@@ -194,7 +194,7 @@ const care = [
         </p>
       </div>
       <div class="reveal">
-        <NailStudio client:visible />
+        <NailStudio client:idle />
       </div>
     </div>
   </section>
@@ -213,13 +213,7 @@ const care = [
         {finishes.map((f, i) => (
           <article class="finish reveal" style={`--delay: ${(i % 3) * 90}`}>
             <div class="finish__visual">
-              <NailVisual
-                shape="almond"
-                length="medium"
-                {...f.visual}
-                instant
-                label={`Finish ${f.name}`}
-              />
+              <Illustration name={f.visual} alt={`Finish ${f.name}`} fit="contain" />
             </div>
             <div class="finish__body">
               <div class="finish__head">
@@ -347,9 +341,13 @@ const care = [
     overflow: hidden;
   }
 
-  .compare__visual :global(svg) {
-    height: 100%;
-    width: auto;
+  .compare__visual {
+    position: relative;
+  }
+
+  .compare__visual :global(.illustration) {
+    position: absolute;
+    inset: 0;
   }
 
   .compare__body {
@@ -428,9 +426,13 @@ const care = [
     background: linear-gradient(160deg, var(--blush-100), var(--cream));
   }
 
-  .finish__visual :global(svg) {
-    width: 100%;
-    height: auto;
+  .finish__visual {
+    position: relative;
+  }
+
+  .finish__visual :global(.illustration) {
+    position: absolute;
+    inset: 0;
   }
 
   .finish__body {
@@ -557,7 +559,7 @@ const care = [
     font-family: var(--font-display);
     font-style: italic;
     font-size: 1.8rem;
-    color: var(--gold-500);
+    color: var(--gold-600);
   }
 
   .care__list h3 {

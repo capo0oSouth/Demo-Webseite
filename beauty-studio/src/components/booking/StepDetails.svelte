@@ -265,7 +265,7 @@
 
   input::placeholder,
   textarea::placeholder {
-    color: #a08b95;
+    color: #8a7480;
   }
 
   input:focus,

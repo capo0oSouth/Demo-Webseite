@@ -1,6 +1,4 @@
 <script lang="ts">
-  import NailVisual from '../visuals/NailVisual.svelte';
-  import EyeVisual from '../visuals/EyeVisual.svelte';
   import { categories, treatmentsFor, type CategoryId } from '../../data/services';
   import type { BookingState } from './state.svelte';
 
@@ -10,6 +8,12 @@
   }
 
   let { booking, onnext }: Props = $props();
+
+  const visuals: Record<CategoryId, string> = {
+    nails: 'nails-rose-almond',
+    lashes: 'lashes-volume-cat',
+    brows: 'brows-lamination',
+  };
 
   const fromPrice = (id: CategoryId) => Math.min(...treatmentsFor(id).map((t) => t.price));
 
@@ -29,13 +33,13 @@
       onclick={() => pick(cat.id)}
     >
       <span class="cat__visual" aria-hidden="true">
-        {#if cat.id === 'nails'}
-          <NailVisual shape="almond" length="medium" color="#D6969C" instant />
-        {:else if cat.id === 'lashes'}
-          <EyeVisual focus="lashes" lashMode="extension" technique="volume" look="cat" instant />
-        {:else}
-          <EyeVisual focus="brows" browMode="lamination" browTinted browColor="#5A3F30" instant />
-        {/if}
+        <img
+          src="/visuals/{visuals[cat.id]}.svg"
+          alt=""
+          width={cat.id === 'nails' ? 360 : 464}
+          height={cat.id === 'nails' ? 360 : 290}
+          class:contain={cat.id === 'nails'}
+        />
       </span>
       <span class="cat__body">
         <span class="cat__name">{cat.name}</span>
@@ -107,13 +111,18 @@
     overflow: hidden;
   }
 
-  .cat__visual :global(svg) {
+  .cat__visual img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
     transition: transform 0.9s var(--ease-out);
   }
 
-  .cat:hover .cat__visual :global(svg) {
+  .cat__visual img.contain {
+    object-fit: contain;
+  }
+
+  .cat:hover .cat__visual img {
     transform: scale(1.04);
   }
 
@@ -187,11 +196,6 @@
       aspect-ratio: auto;
       height: 100%;
       min-height: 8.5rem;
-    }
-
-    .cat__visual :global(svg) {
-      height: 100%;
-      width: 100%;
     }
 
     .cat__body {

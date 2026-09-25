@@ -6,7 +6,8 @@ import Photo from '../components/Photo.astro';
 import PriceList from '../components/PriceList.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
-import EyeVisual from '../components/visuals/EyeVisual.svelte';
+import Illustration from '../components/Illustration.astro';
+import type { IllustrationName } from '../data/illustrations';
 import BrowStudio from '../components/visuals/BrowStudio.svelte';
 import { browFaq } from '../data/content';
 
@@ -98,7 +99,7 @@ const pmu = [
         </p>
       </div>
       <div class="reveal">
-        <BrowStudio client:visible />
+        <BrowStudio client:idle />
       </div>
     </div>
   </section>
@@ -151,13 +152,9 @@ const pmu = [
         {pmu.map((p, i) => (
           <article class="pmu__card reveal" style={`--delay: ${i * 110}`}>
             <div class="pmu__visual">
-              <EyeVisual
-                focus="brows"
-                browMode="pmu"
-                pmu={p.id}
-                browColor="#4A3327"
-                instant
-                label={`${p.title} Ergebnis`}
+              <Illustration
+                name={`pmu-${p.id}` as IllustrationName}
+                alt={`Illustration: ${p.title}`}
               />
             </div>
             <div class="pmu__body">

@@ -140,7 +140,7 @@
           <dd>ca. {formatDuration(t.minutes + (opt.params?.tint === 'tint' ? 10 : 0))}</dd>
         </div>
         <div>
-          <dt>Hält</dt>
+          <dt>Haltbarkeit</dt>
           <dd>{t.durability}</dd>
         </div>
       </dl>

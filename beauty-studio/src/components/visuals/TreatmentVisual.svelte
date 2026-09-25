@@ -2,7 +2,7 @@
   import NailVisual from './NailVisual.svelte';
   import EyeVisual from './EyeVisual.svelte';
   import type { Treatment } from '../../data/services';
-  import type { Selection } from '../../lib/booking';
+  import { visibleGroups, type Selection } from '../../lib/booking';
 
   interface Props {
     treatment: Treatment;
@@ -101,12 +101,12 @@
   const isEye = $derived(kind === 'lashes' || kind === 'brows' || kind === 'combo');
   const beforeFocus = $derived(isEye ? eyeProps.focus : 'lashes');
 
+  // Nur sichtbare, aussagekräftige Optionen (ohne «Ohne» und ohne Termin-Intervall)
   const summary = $derived(
-    treatment.groups
-      .filter((g) => g.kind !== 'swatch' || g.id === 'color' || g.id === 'browcolor')
-      .map((g) => (selection[g.id] ? labelOf(g.id) : null))
-      .filter(Boolean)
-      .slice(0, 5)
+    visibleGroups(treatment, selection)
+      .filter((g) => g.id !== 'interval' && selection[g.id])
+      .map((g) => labelOf(g.id))
+      .filter((l) => l && l !== 'Ohne')
       .join(' · '),
   );
 
@@ -202,6 +202,7 @@
   .stage__canvas {
     position: relative;
     aspect-ratio: 1.6;
+    overflow: hidden;
   }
 
   .layer {

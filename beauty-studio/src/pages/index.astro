@@ -9,8 +9,7 @@ import CtaBand from '../components/CtaBand.astro';
 import Visit from '../components/Visit.astro';
 import HeroShapes from '../components/visuals/HeroShapes.svelte';
 import NailStudio from '../components/visuals/NailStudio.svelte';
-import NailVisual from '../components/visuals/NailVisual.svelte';
-import EyeVisual from '../components/visuals/EyeVisual.svelte';
+import Illustration from '../components/Illustration.astro';
 import { categories, treatmentsFor } from '../data/services';
 import { team } from '../data/team';
 import { generalFaq, values } from '../data/content';
@@ -27,7 +26,8 @@ const highlights: Record<string, string[]> = {
 const looks = [
   {
     name: 'Milky Almond',
-    nail: { shape: 'almond', length: 'medium', color: '#F3ECE6' },
+    visual: 'look-milky-almond' as const,
+    nail: true,
     text: 'Mandelform, mittlere Länge, milchiges Weiss – der zeitlose Bestseller.',
     treatment: 'Gel-Modellage · Neuset',
     price: 130,
@@ -35,7 +35,8 @@ const looks = [
   },
   {
     name: 'Clean French',
-    nail: { shape: 'squoval', length: 'natural', color: '#F3ECE6', finish: 'french' },
+    visual: 'look-clean-french' as const,
+    nail: true,
     text: 'Feine French auf den eigenen Nägeln – elegant und bürotauglich.',
     treatment: 'Gel-Lack',
     price: 90,
@@ -43,7 +44,8 @@ const looks = [
   },
   {
     name: 'Cherry Coffin',
-    nail: { shape: 'coffin', length: 'long', color: '#A3182D' },
+    visual: 'look-cherry-coffin' as const,
+    nail: true,
     text: 'Ballerina-Form in sattem Kirschrot – ein Statement für jeden Anlass.',
     treatment: 'Gel-Modellage · Neuset',
     price: 140,
@@ -51,14 +53,7 @@ const looks = [
   },
   {
     name: 'Natural Classic',
-    eye: {
-      focus: 'lashes',
-      lashMode: 'extension',
-      technique: 'classic',
-      look: 'natural',
-      curl: 'c',
-      lashLength: 'medium',
-    } as const,
+    visual: 'look-natural-classic' as const,
     text: 'Eine Extension pro Wimper, sanfter C-Curl – wie frisch getuscht.',
     treatment: 'Wimpernverlängerung · Classic',
     price: 150,
@@ -66,14 +61,7 @@ const looks = [
   },
   {
     name: 'Soft Cat Eye',
-    eye: {
-      focus: 'lashes',
-      lashMode: 'extension',
-      technique: 'volume',
-      look: 'cat',
-      curl: 'cc',
-      lashLength: 'long',
-    } as const,
+    visual: 'look-soft-cat-eye' as const,
     text: 'Volume-Fächer, nach aussen länger – öffnet und hebt den Blick.',
     treatment: 'Wimpernverlängerung · Volume',
     price: 190,
@@ -81,12 +69,7 @@ const looks = [
   },
   {
     name: 'Fluffy Brows',
-    eye: {
-      focus: 'brows',
-      browMode: 'lamination',
-      browTinted: true,
-      browColor: '#5A3F30',
-    } as const,
+    visual: 'brows-lamination' as const,
     text: 'Laminiert und gefärbt in Mittelbraun – volle, gebürstete Brauen.',
     treatment: 'Brow Lamination mit Färben',
     price: 94,
@@ -146,7 +129,7 @@ const looks = [
           />
         </div>
         <div class="hero__float hero__float--shapes reveal" style="--delay: 500">
-          <HeroShapes client:visible />
+          <HeroShapes client:idle />
         </div>
         <div class="hero__float hero__float--badge reveal" style="--delay: 650">
           <Icon name="sparkle" />
@@ -241,7 +224,7 @@ const looks = [
         </p>
       </div>
       <div class="reveal">
-        <NailStudio client:visible compact />
+        <NailStudio client:idle compact />
       </div>
     </div>
   </section>
@@ -303,11 +286,11 @@ const looks = [
         {looks.map((look, i) => (
           <article class="look reveal" style={`--delay: ${(i % 3) * 100}`}>
             <div class="look__visual">
-              {look.nail ? (
-                <NailVisual {...look.nail} instant label={`Look ${look.name}`} />
-              ) : (
-                <EyeVisual {...look.eye} instant label={`Look ${look.name}`} />
-              )}
+              <Illustration
+                name={look.visual}
+                alt={`Illustration: ${look.name}`}
+                fit={look.nail ? 'contain' : 'cover'}
+              />
             </div>
             <div class="look__body">
               <p class="look__kind">{look.treatment}</p>
@@ -763,7 +746,7 @@ const looks = [
     font-style: italic;
     font-size: 2.4rem;
     line-height: 1;
-    color: var(--gold-500);
+    color: var(--gold-600);
   }
 
   .steps__list h3 {
@@ -810,12 +793,7 @@ const looks = [
     overflow: hidden;
   }
 
-  .look__visual :global(svg.nail-visual) {
-    height: 100%;
-    width: auto;
-  }
-
-  .look__visual :global(svg.eye-visual) {
+  .look__visual :global(.illustration) {
     position: absolute;
     inset: 0;
   }
