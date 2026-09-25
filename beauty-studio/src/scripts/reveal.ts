@@ -20,7 +20,31 @@ function init() {
     },
     { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
   );
-  items.forEach((el) => observer.observe(el));
+
+  // Eine .reveal-mask ist per clip-path vollständig abgedeckt. Chromium rechnet den eigenen
+  // clip-path mit ein, ihr Sichtbarkeitsanteil bleibt also 0 – deshalb das Elternelement beobachten.
+  const masksByParent = new Map<Element, HTMLElement[]>();
+  const maskObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          masksByParent.get(entry.target)?.forEach((el) => el.classList.add('is-visible'));
+          maskObserver.unobserve(entry.target);
+        }
+      }
+    },
+    { rootMargin: '0px 0px -8% 0px', threshold: 0 },
+  );
+
+  for (const el of items) {
+    const parent = el.parentElement;
+    if (el.classList.contains('reveal-mask') && parent) {
+      masksByParent.set(parent, [...(masksByParent.get(parent) ?? []), el]);
+    } else {
+      observer.observe(el);
+    }
+  }
+  masksByParent.forEach((_, parent) => maskObserver.observe(parent));
 }
 
 init();
