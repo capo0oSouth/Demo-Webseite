@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+---
+
+<BaseLayout
+  title="Datenschutz"
+  description="Datenschutzerklärung der Demo-Website von Maison Trois, Wil SG."
+>
+  <PageHero
+    eyebrow="Datenschutz"
+    lead="Kurz gesagt: Diese Demo-Website überträgt keine persönlichen Daten."
+  >
+    Datenschutz
+  </PageHero>
+  <section class="section section--tight">
+    <div class="container container--narrow prose legal">
+      <p class="legal__note">
+        <strong>Demo-Hinweis:</strong> Diese Website ist ein Demonstrationsprojekt. Das
+        Buchungssystem, das Kontaktformular und die Gutschein-Anfrage funktionieren vollständig im
+        Browser, senden aber keine Daten an einen Server.
+      </p>
+      <h2>Welche Daten wir verarbeiten</h2>
+      <p>
+        Eingaben im Buchungssystem und in Formularen (z. B. Name, E-Mail, Telefonnummer) bleiben
+        ausschliesslich im Arbeitsspeicher deines Browsers. Sie werden weder gespeichert noch
+        übertragen und sind nach dem Schliessen oder Neuladen der Seite gelöscht.
+      </p>
+      <h2>Cookies & Tracking</h2>
+      <p>
+        Diese Website verwendet keine Cookies, keine Analyse-Tools und keine Werbe-Tracker.
+        Schriften und Bilder werden direkt von dieser Website ausgeliefert – ohne Anfragen an
+        Drittanbieter.
+      </p>
+      <h2>Externe Links</h2>
+      <p>
+        Der Link «Route planen» öffnet OpenStreetMap in einem neuen Fenster. Dort gelten die
+        Datenschutzbestimmungen der OpenStreetMap Foundation.
+      </p>
+      <h2>Deine Rechte</h2>
+      <p>
+        Bei einem echten Studio hättest du nach dem Schweizer Datenschutzgesetz (DSG) jederzeit das
+        Recht auf Auskunft, Berichtigung und Löschung deiner Daten. Anfragen würden an die im
+        Impressum genannte Adresse gerichtet.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal {
+    max-width: 760px;
+  }
+
+  .legal__note {
+    padding: 1rem 1.2rem;
+    border-radius: 14px;
+    background: var(--gold-200);
+    color: #574120 !important;
+  }
+</style>

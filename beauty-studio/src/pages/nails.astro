@@ -1,0 +1,575 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import PriceList from '../components/PriceList.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import NailVisual from '../components/visuals/NailVisual.svelte';
+import NailStudio from '../components/visuals/NailStudio.svelte';
+import { nailFaq } from '../data/content';
+import { treatmentById } from '../data/services';
+
+const compare = [
+  {
+    id: 'gel-lack',
+    title: 'Gel-Lack',
+    visual: { shape: 'squoval', length: 'natural', color: '#D6969C' },
+    what: 'Farbe auf deinem Naturnagel',
+    length: 'Deine eigene Länge',
+    hold: '2–3 Wochen',
+    for: 'Gepflegte, eher feste Naturnägel',
+  },
+  {
+    id: 'biab',
+    title: 'BIAB',
+    visual: { shape: 'oval', length: 'natural', color: '#F0CFCC' },
+    what: 'Aufbau-Gel, das den Naturnagel stärkt',
+    length: 'Eigene Länge, leicht verlängerbar',
+    hold: '3–4 Wochen',
+    for: 'Weiche, brüchige Nägel, die wachsen sollen',
+  },
+  {
+    id: 'gel-neuset',
+    title: 'Gel-Modellage',
+    visual: { shape: 'almond', length: 'long', color: '#F3ECE6' },
+    what: 'Künstliche Verlängerung mit Gel',
+    length: 'Kurz bis extra lang',
+    hold: 'Auffüllen alle 3–4 Wochen',
+    for: 'Länge und Formen wie Ballerina oder Stiletto',
+  },
+  {
+    id: 'manicure',
+    title: 'Maniküre',
+    visual: { shape: 'round', length: 'natural', finish: 'natural' },
+    what: 'Pflege ohne Gel, auf Wunsch mit Lack',
+    length: 'Deine eigene Länge',
+    hold: 'Lack ca. 1 Woche',
+    for: 'Gepflegte Hände – ganz natürlich',
+  },
+];
+
+const finishes = [
+  {
+    name: 'Uni',
+    price: 'inklusive',
+    visual: { color: '#A26B7A' },
+    text: 'Eine Farbe, deckend und hochglänzend. Zeitlos und immer elegant.',
+  },
+  {
+    name: 'French',
+    price: '+ CHF 15.–',
+    visual: { color: '#F3ECE6', finish: 'french' },
+    text: 'Zarte Nude-Basis und eine feine Spitze – klassisch weiss oder farbig.',
+  },
+  {
+    name: 'Babyboomer',
+    price: '+ CHF 15.–',
+    visual: { color: '#F3ECE6', finish: 'babyboomer' },
+    text: 'Weicher Verlauf von Nude zur hellen Spitze – die moderne French.',
+  },
+  {
+    name: 'Chrome',
+    price: '+ CHF 10.–',
+    visual: { color: '#C5B5DC', finish: 'chrome' },
+    text: 'Spiegelnder Metallic-Glanz über deiner Farbe, z. B. als Glazed-Donut-Look.',
+  },
+  {
+    name: 'Cat Eye',
+    price: '+ CHF 10.–',
+    visual: { color: '#5A1426', finish: 'cateye' },
+    text: 'Ein magnetischer Schimmerstreifen, der sich mit dem Licht bewegt.',
+  },
+  {
+    name: 'Glitzer',
+    price: '+ CHF 10.–',
+    visual: { color: '#F0CFCC', finish: 'glitter' },
+    text: 'Feiner Glitzer, eingearbeitet in deine Farbe – dezent oder festlich.',
+  },
+];
+
+const care = [
+  {
+    title: 'Täglich ölen',
+    text: 'Ein Tropfen Nagelhautöl am Abend hält Nagelhaut und Gel geschmeidig.',
+  },
+  {
+    title: 'Handschuhe tragen',
+    text: 'Beim Putzen und Abwaschen schützen Handschuhe vor Reinigungsmitteln.',
+  },
+  {
+    title: 'Nicht als Werkzeug nutzen',
+    text: 'Dosen und Etiketten bitte nicht mit den Nägeln öffnen.',
+  },
+  {
+    title: 'Nie selbst ablösen',
+    text: 'Abreissen schädigt den Naturnagel – wir lösen schonend ab.',
+  },
+];
+---
+
+<BaseLayout
+  title="Nails"
+  description="Gel-Lack, BIAB, Gel-Modellage, Maniküre und Pediküre in Wil – mit Formen-Guide, Preisen und Online-Buchung."
+>
+  <PageHero
+    eyebrow="Nails"
+    lead="Von gepflegten Naturnägeln mit Gel-Lack bis zur langen Stiletto-Modellage: Noemi und ihr Team setzen deine Wunschform präzise und langlebig um."
+    photo="nails-hero"
+    photoAlt="Frisch modellierte Nägel in Mandelform mit zartem Nude-Gel"
+    fallback="nails"
+    primary={{ href: '/buchen?kategorie=nails', label: 'Nails buchen' }}
+    secondary={{ href: '#preise', label: 'Preise ansehen' }}
+    facts={[
+      { value: 'ab CHF 55.–', label: 'Maniküre Classic' },
+      { value: '7 Formen', label: 'von Eckig bis Stiletto' },
+      { value: 'HEMA-frei', label: 'hautfreundliche Gels' },
+    ]}
+  >
+    Nägel, die zu dir <em class="accent">passen.</em>
+  </PageHero>
+
+  <!-- Vergleich -->
+  <section class="section section--blush">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Orientierung</p>
+        <h2>
+          Welche Behandlung <em class="accent">passt zu mir?</em>
+        </h2>
+        <p>Die vier Grundbehandlungen im Überblick – einfach erklärt, ohne Fachchinesisch.</p>
+      </div>
+      <div class="compare">
+        {compare.map((c, i) => (
+          <article class="compare__card reveal" style={`--delay: ${i * 90}`}>
+            <div class="compare__visual">
+              <NailVisual {...c.visual} instant label={`Beispiel ${c.title}`} />
+            </div>
+            <div class="compare__body">
+              <h3>{c.title}</h3>
+              <p class="compare__what">{c.what}</p>
+              <dl>
+                <div>
+                  <dt>Länge</dt>
+                  <dd>{c.length}</dd>
+                </div>
+                <div>
+                  <dt>Hält</dt>
+                  <dd>{c.hold}</dd>
+                </div>
+                <div>
+                  <dt>Ideal für</dt>
+                  <dd>{c.for}</dd>
+                </div>
+              </dl>
+              <div class="compare__foot">
+                <span>ab CHF {treatmentById[c.id].price}.–</span>
+                <a
+                  href={`/buchen?behandlung=${c.id}`}
+                  class="link-arrow"
+                  aria-label={`${c.title} buchen`}
+                >
+                  Buchen <Icon name="arrow" />
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Formen-Guide -->
+  <section class="section" id="formen">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Formen & Längen</p>
+        <h2>
+          Dein Formen-Guide – <em class="accent">live ausprobieren.</em>
+        </h2>
+        <p>
+          Sieben Formen, fünf Längen, zwölf Lieblingsfarben. Stiletto und Ballerina brauchen etwas
+          Länge – der Guide passt das automatisch an.
+        </p>
+      </div>
+      <div class="reveal">
+        <NailStudio client:visible />
+      </div>
+    </div>
+  </section>
+
+  <!-- Finishes -->
+  <section class="section section--blush">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <p class="eyebrow">Finish</p>
+        <h2>
+          Vom Klassiker bis <em class="accent">Cat Eye.</em>
+        </h2>
+        <p>Jedes Finish lässt sich mit jeder Form und Farbe kombinieren.</p>
+      </div>
+      <div class="finishes">
+        {finishes.map((f, i) => (
+          <article class="finish reveal" style={`--delay: ${(i % 3) * 90}`}>
+            <div class="finish__visual">
+              <NailVisual
+                shape="almond"
+                length="medium"
+                {...f.visual}
+                instant
+                label={`Finish ${f.name}`}
+              />
+            </div>
+            <div class="finish__body">
+              <div class="finish__head">
+                <h3>{f.name}</h3>
+                <span>{f.price}</span>
+              </div>
+              <p>{f.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Studio-Einblick -->
+  <section class="section section--tight">
+    <div class="container gallery">
+      <figure class="gallery__item gallery__item--tall reveal-mask">
+        <Photo
+          name="nails-work"
+          alt="Noemi feilt die Form einer Gel-Modellage"
+          fallback="nails-nude"
+          sizes="(min-width: 960px) 40vw, 100vw"
+        />
+      </figure>
+      <figure class="gallery__item reveal-mask" style="--delay: 120">
+        <Photo
+          name="nails-result-1"
+          alt="Kurze Nägel in Kirschrot, frisch lackiert"
+          fallback="nails-red"
+          sizes="(min-width: 960px) 30vw, 100vw"
+        />
+      </figure>
+      <figure class="gallery__item reveal-mask" style="--delay: 220">
+        <Photo
+          name="nails-result-2"
+          alt="French Manicure in Mandelform"
+          fallback="nails-french"
+          sizes="(min-width: 960px) 30vw, 100vw"
+        />
+      </figure>
+      <div class="gallery__text reveal">
+        <p class="eyebrow">Handwerk</p>
+        <h2>
+          Präzision, <em class="accent">die hält.</em>
+        </h2>
+        <p>
+          Wir arbeiten mit sanfter Nagelvorbereitung, HEMA-freien Gels und viel Liebe zum Detail an
+          der Nagelhaut. Deshalb halten unsere Nägel – und sehen auch in Woche drei noch gepflegt
+          aus.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preise -->
+  <section class="section section--blush" id="preise">
+    <div class="container container--narrow">
+      <div class="section-head reveal">
+        <p class="eyebrow">Preise</p>
+        <h2>
+          Nails <em class="accent">Preisliste.</em>
+        </h2>
+        <p>
+          Alle Preise in CHF, inklusive Beratung. Aufpreise für Länge, Finish und Nail Art siehst du
+          bei jeder Behandlung.
+        </p>
+      </div>
+      <div class="reveal">
+        <PriceList category="nails" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Pflege & FAQ -->
+  <section class="section">
+    <div class="container care">
+      <div>
+        <div class="section-head reveal">
+          <p class="eyebrow">Pflege</p>
+          <h2>
+            So bleiben deine <em class="accent">Nägel schön.</em>
+          </h2>
+        </div>
+        <ol class="care__list">
+          {care.map((c, i) => (
+            <li class="reveal" style={`--delay: ${i * 80}`}>
+              <h3>{c.title}</h3>
+              <p>{c.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div class="reveal">
+        <h2 class="faq-title">Häufige Fragen</h2>
+        <Faq items={nailFaq} />
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Deine neuen Nägel warten." href="/buchen?kategorie=nails" label="Nails buchen" />
+</BaseLayout>
+
+<style>
+  .compare {
+    display: grid;
+    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  }
+
+  .compare__card {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-l);
+    background: var(--white);
+    box-shadow: var(--shadow-s);
+    overflow: hidden;
+  }
+
+  .compare__visual {
+    aspect-ratio: 1.3;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(160deg, var(--blush-100), var(--cream));
+    overflow: hidden;
+  }
+
+  .compare__visual :global(svg) {
+    height: 100%;
+    width: auto;
+  }
+
+  .compare__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.3rem 1.4rem 1.4rem;
+  }
+
+  .compare__body h3 {
+    font-size: 1.6rem;
+  }
+
+  .compare__what {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--berry-700);
+  }
+
+  .compare dl {
+    margin: 0.3rem 0 0;
+    display: grid;
+    gap: 0.55rem;
+    font-size: 0.9rem;
+  }
+
+  .compare dt {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold-600);
+  }
+
+  .compare dd {
+    margin: 0;
+    color: var(--text-soft);
+  }
+
+  .compare__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .compare__foot span {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+  }
+
+  .finishes {
+    display: grid;
+    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  }
+
+  .finish {
+    display: grid;
+    grid-template-columns: 38% 1fr;
+    align-items: center;
+    border-radius: var(--radius-m);
+    background: var(--white);
+    box-shadow: var(--shadow-s);
+    overflow: hidden;
+  }
+
+  .finish__visual {
+    height: 100%;
+    min-height: 9rem;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(160deg, var(--blush-100), var(--cream));
+  }
+
+  .finish__visual :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+
+  .finish__body {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.1rem 1.2rem;
+  }
+
+  .finish__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .finish__head h3 {
+    font-size: 1.3rem;
+  }
+
+  .finish__head span {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--berry-700);
+    white-space: nowrap;
+  }
+
+  .finish__body p {
+    font-size: 0.9rem;
+    color: var(--text-soft);
+  }
+
+  .gallery {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  @media (min-width: 900px) {
+    .gallery {
+      grid-template-columns: 1.2fr 1fr 1fr;
+      grid-template-rows: auto auto;
+    }
+
+    .gallery__item--tall {
+      grid-row: span 2;
+    }
+
+    .gallery__text {
+      grid-column: 2 / 4;
+    }
+  }
+
+  .gallery__item {
+    margin: 0;
+    aspect-ratio: 1.1;
+    border-radius: var(--radius-l);
+    overflow: hidden;
+  }
+
+  .gallery__item--tall {
+    aspect-ratio: auto;
+    min-height: 22rem;
+    border-radius: var(--arch);
+  }
+
+  .gallery__item.reveal-mask {
+    clip-path: inset(100% 0 0 0 round var(--radius-l));
+  }
+
+  .gallery__item.reveal-mask.is-visible {
+    clip-path: inset(0 0 0 0 round var(--radius-l));
+  }
+
+  .gallery__item--tall.reveal-mask.is-visible {
+    clip-path: inset(0 0 0 0 round 999px 999px 32px 32px);
+  }
+
+  .gallery__text {
+    display: grid;
+    gap: 1rem;
+    align-content: center;
+    padding: 1rem 0.5rem;
+  }
+
+  .gallery__text h2 {
+    font-size: var(--step-3);
+  }
+
+  .gallery__text p:not(.eyebrow) {
+    color: var(--text-soft);
+    max-width: 38rem;
+  }
+
+  .care {
+    display: grid;
+    gap: 3rem;
+  }
+
+  @media (min-width: 960px) {
+    .care {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+  }
+
+  .care__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.2rem;
+    counter-reset: care;
+  }
+
+  .care__list li {
+    position: relative;
+    padding-left: 3.4rem;
+    counter-increment: care;
+  }
+
+  .care__list li::before {
+    content: counter(care, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: -0.2rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.8rem;
+    color: var(--gold-500);
+  }
+
+  .care__list h3 {
+    font-size: 1.2rem;
+  }
+
+  .care__list p {
+    color: var(--text-soft);
+  }
+
+  .faq-title {
+    font-size: var(--step-2);
+    margin-bottom: 1rem;
+  }
+</style>

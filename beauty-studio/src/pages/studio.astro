@@ -1,0 +1,430 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Reviews from '../components/Reviews.astro';
+import { team } from '../data/team';
+import { timeline, values } from '../data/content';
+import { site } from '../data/site';
+
+const days = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+const bookFor: Record<string, string> = { noemi: 'nails', alessia: 'lashes', lea: 'brows' };
+---
+
+<BaseLayout
+  title="Studio & Team"
+  description="Maison Trois in Wil: seit 2022 geführt von Noemi Egger, Alessia Keller und Lea Zünd – Nails, Lashes und Brows mit Herz und Präzision."
+>
+  <PageHero
+    eyebrow="Studio & Team"
+    lead={`Seit ${site.founded} an der Oberen Bahnhofstrasse in Wil: ein helles Studio, drei Behandlungsplätze, ein eigener Lash-Raum – und drei Frauen, die ihr Handwerk lieben.`}
+    photo="team-group"
+    photoAlt="Noemi, Alessia und Lea lachend im Studio von Maison Trois"
+    fallback="studio"
+    facts={[
+      { value: `${new Date().getFullYear() - site.founded} Jahre`, label: 'in Wil' },
+      { value: '3', label: 'Inhaberinnen' },
+      { value: '6 000+', label: 'Behandlungen' },
+    ]}
+  >
+    Drei Frauen, <em class="accent">ein Traum.</em>
+  </PageHero>
+
+  <!-- Geschichte -->
+  <section class="section section--blush">
+    <div class="container story">
+      <div class="story__text">
+        <div class="section-head reveal">
+          <p class="eyebrow">Unsere Geschichte</p>
+          <h2>
+            Wie aus einer Idee <em class="accent">Maison Trois</em> wurde.
+          </h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            Noemi, Alessia und Lea haben sich während ihrer Weiterbildungen in St. Gallen
+            kennengelernt – drei Spezialistinnen, drei Handwerke, eine gemeinsame Vorstellung von
+            Qualität. Beim Kaffee entstand die Idee: ein Studio, in dem jede ihr Fachgebiet mit
+            voller Hingabe ausübt.
+          </p>
+          <p>
+            Der Name war schnell gefunden: <em>Maison Trois</em> – das Haus der Drei. Drei
+            Inhaberinnen, drei Leidenschaften, ein gemeinsamer Anspruch an Hygiene, Produkte und
+            ehrliche Beratung.
+          </p>
+        </div>
+      </div>
+      <ol class="timeline">
+        {timeline.map((t, i) => (
+          <li class="reveal" style={`--delay: ${i * 90}`}>
+            <span class="timeline__year">{t.year}</span>
+            <div>
+              <h3>{t.title}</h3>
+              <p>{t.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section" id="team">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <p class="eyebrow">Das Team</p>
+        <h2>
+          Lerne uns <em class="accent">kennen.</em>
+        </h2>
+      </div>
+      <div class="people">
+        {team.map((m, i) => (
+          <article class:list={['person', { 'person--flip': i % 2 === 1 }]}>
+            <div class="person__photo reveal-mask">
+              <Photo
+                name={`team-${m.id}`}
+                alt={`Porträt von ${m.name}`}
+                fallback="portrait"
+                initial={m.firstName[0]}
+                sizes="(min-width: 960px) 40vw, 100vw"
+                position="50% 25%"
+              />
+            </div>
+            <div class="person__text reveal">
+              <p class="eyebrow">{m.focus}</p>
+              <h3>{m.name}</h3>
+              <p class="person__role">
+                {m.role} · {m.since}
+              </p>
+              <p>{m.bio}</p>
+              <blockquote>«{m.quote}»</blockquote>
+              <ul class="person__tags">
+                {m.specialties.map((s) => (
+                  <li class="chip">{s}</li>
+                ))}
+              </ul>
+              <p class="person__days">
+                <Icon name="calendar" /> Im Studio: {m.workdays.map((d) => days[d]).join(' · ')}
+              </p>
+              <a href={`/buchen?kategorie=${bookFor[m.id]}&artist=${m.id}`} class="btn btn--small">
+                Termin bei {m.firstName} <Icon name="arrow" class="arrow" />
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Studio -->
+  <section class="section section--plum studio-section">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Das Studio</p>
+        <h2>
+          Hell, ruhig, <em class="accent studio-accent">mit Liebe eingerichtet.</em>
+        </h2>
+        <p class="studio-lead">
+          Warmes Licht, weiche Stoffe, frische Blumen: Unser Studio im ersten Obergeschoss ist ein
+          Ort zum Abschalten – mit zwei Nagelplätzen, einem ruhigen Lash- und Brow-Raum und einer
+          kleinen Lounge.
+        </p>
+      </div>
+      <div class="studio-gallery">
+        <figure class="studio-gallery__a reveal-mask">
+          <Photo
+            name="studio-interior"
+            alt="Heller Behandlungsraum mit Nageltisch und Pflanzen"
+            fallback="studio"
+            sizes="(min-width: 960px) 50vw, 100vw"
+          />
+        </figure>
+        <figure class="studio-gallery__b reveal-mask" style="--delay: 120">
+          <Photo
+            name="studio-detail"
+            alt="Detailaufnahme: Nagellack-Fläschchen in Rosé- und Nudetönen"
+            fallback="nails-nude"
+            sizes="(min-width: 960px) 25vw, 100vw"
+          />
+        </figure>
+        <figure class="studio-gallery__c reveal-mask" style="--delay: 220">
+          <Photo
+            name="studio-lounge"
+            alt="Empfangsbereich mit Sessel, Spiegel und Blumen"
+            fallback="studio"
+            sizes="(min-width: 960px) 25vw, 100vw"
+          />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Werte -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Unsere Werte</p>
+        <h2>
+          Worauf du dich <em class="accent">verlassen kannst.</em>
+        </h2>
+      </div>
+      <div class="values">
+        {values.map((v, i) => (
+          <article class="value reveal" style={`--delay: ${i * 90}`}>
+            <span class="value__icon">
+              <Icon name={v.icon} />
+            </span>
+            <h3>{v.title}</h3>
+            <p>{v.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--blush">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Kundinnenstimmen</p>
+        <h2>
+          Was man über <em class="accent">uns sagt.</em>
+        </h2>
+      </div>
+      <div class="reveal">
+        <Reviews />
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Wir freuen uns auf dich." />
+</BaseLayout>
+
+<style>
+  .story {
+    display: grid;
+    gap: 3rem;
+  }
+
+  @media (min-width: 960px) {
+    .story {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: grid;
+    gap: 1.8rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 2.1rem;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 1px;
+    background: linear-gradient(var(--gold-400), transparent);
+  }
+
+  .timeline li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 4.2rem 1fr;
+    gap: 1rem;
+  }
+
+  .timeline__year {
+    position: relative;
+    z-index: 1;
+    justify-self: center;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-pill);
+    background: var(--plum-900);
+    color: var(--gold-300);
+    font-size: 0.82rem;
+    font-weight: 500;
+    height: fit-content;
+  }
+
+  .timeline h3 {
+    font-size: 1.3rem;
+  }
+
+  .timeline p {
+    color: var(--text-soft);
+  }
+
+  .people {
+    display: grid;
+    gap: clamp(3rem, 2rem + 4vw, 6rem);
+  }
+
+  .person {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .person {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: 4rem;
+    }
+
+    .person--flip .person__photo {
+      order: 2;
+    }
+  }
+
+  .person__photo {
+    aspect-ratio: 4 / 5;
+    max-width: 460px;
+    width: 100%;
+    justify-self: center;
+    border-radius: var(--arch);
+    overflow: hidden;
+    box-shadow: var(--shadow-m);
+  }
+
+  .person__photo.reveal-mask {
+    clip-path: inset(100% 0 0 0 round 999px 999px 32px 32px);
+  }
+
+  .person__photo.reveal-mask.is-visible {
+    clip-path: inset(0 0 0 0 round 999px 999px 32px 32px);
+  }
+
+  .person__text {
+    display: grid;
+    gap: 0.9rem;
+    justify-items: start;
+  }
+
+  .person__text h3 {
+    font-size: var(--step-3);
+  }
+
+  .person__role {
+    font-weight: 500;
+    color: var(--berry-700);
+  }
+
+  .person__text > p:not(.eyebrow):not(.person__role):not(.person__days) {
+    color: var(--text-soft);
+  }
+
+  blockquote {
+    margin: 0.3rem 0;
+    padding-left: 1.2rem;
+    border-left: 2px solid var(--gold-400);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.2rem;
+  }
+
+  .person__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .person__days {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .person__days :global(svg) {
+    width: 1.05rem;
+    height: 1.05rem;
+    color: var(--gold-600);
+  }
+
+  .studio-section .eyebrow {
+    color: var(--gold-300);
+  }
+
+  .studio-accent {
+    color: var(--rose-400) !important;
+  }
+
+  .studio-lead {
+    color: rgba(251, 240, 236, 0.78) !important;
+  }
+
+  .studio-gallery {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .studio-gallery figure {
+    margin: 0;
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    aspect-ratio: 1.3;
+  }
+
+  @media (min-width: 900px) {
+    .studio-gallery {
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: 1fr 1fr;
+    }
+
+    .studio-gallery__a {
+      grid-row: span 2;
+      aspect-ratio: auto !important;
+    }
+  }
+
+  .values {
+    display: grid;
+    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  }
+
+  .value {
+    display: grid;
+    gap: 0.7rem;
+    align-content: start;
+    padding: 1.6rem;
+    border-radius: var(--radius-l);
+    background: var(--white);
+    box-shadow: var(--shadow-s);
+  }
+
+  .value__icon {
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--blush-100);
+    color: var(--berry-700);
+  }
+
+  .value__icon :global(svg) {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  .value h3 {
+    font-size: 1.3rem;
+  }
+
+  .value p {
+    color: var(--text-soft);
+    font-size: 0.95rem;
+  }
+</style>

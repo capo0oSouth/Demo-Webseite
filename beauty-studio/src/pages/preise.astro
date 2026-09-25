@@ -1,0 +1,201 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import PriceList from '../components/PriceList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { categories, policies } from '../data/services';
+---
+
+<BaseLayout
+  title="Preise"
+  description="Alle Preise für Nails, Lashes und Brows bei Maison Trois in Wil – transparent, inklusive Aufpreisen für Länge, Technik und Extras."
+>
+  <PageHero
+    eyebrow="Preise"
+    lead="Transparente Preise ohne Überraschungen. Aufpreise für Länge, Technik oder Nail Art siehst du hier – und im Buchungssystem live beim Konfigurieren."
+  >
+    Unsere <em class="accent">Preisliste.</em>
+  </PageHero>
+
+  <nav class="jump" aria-label="Kategorien">
+    <div class="container jump__inner">
+      {categories.map((c) => (
+        <a href={`#${c.id}`}>{c.name}</a>
+      ))}
+      <a href="#bedingungen">Bedingungen</a>
+    </div>
+  </nav>
+
+  {categories.map((c, i) => (
+    <section
+      class:list={['section', 'section--tight', { 'section--blush': i % 2 === 1 }]}
+      id={c.id}
+    >
+      <div class="container price-block">
+        <div class="price-block__head reveal">
+          <p class="eyebrow">0{i + 1}</p>
+          <h2>{c.name}</h2>
+          <p>{c.intro}</p>
+          <a href={c.href} class="link-arrow">
+            Mehr zu {c.name} <Icon name="arrow" />
+          </a>
+        </div>
+        <div class="reveal">
+          <PriceList category={c.id} />
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="section section--tight" id="bedingungen">
+    <div class="container container--narrow">
+      <div class="terms reveal">
+        <h2>Gut zu wissen</h2>
+        <ul>
+          <li>
+            <Icon name="card" />
+            <span>{policies.payment}</span>
+          </li>
+          <li>
+            <Icon name="calendar" />
+            <span>{policies.cancellation}</span>
+          </li>
+          <li>
+            <Icon name="info" />
+            <span>{policies.lateCancellation}</span>
+          </li>
+          <li>
+            <Icon name="gift" />
+            <span>
+              Gutscheine gibt es ab CHF 50.– – im Studio oder{' '}
+              <a href="/kontakt#gutscheine">auf Anfrage</a>.
+            </span>
+          </li>
+        </ul>
+        <p class="terms__note">
+          Alle Preise in Schweizer Franken inkl. MWST. Stand {new Date().getFullYear()}.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .jump {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 20;
+    background: rgba(252, 248, 245, 0.92);
+    backdrop-filter: blur(10px);
+    border-block: 1px solid var(--line);
+  }
+
+  .jump__inner {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding-block: 0.7rem;
+    scrollbar-width: none;
+  }
+
+  .jump a {
+    flex: none;
+    padding: 0.45rem 1.1rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--line-strong);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .jump a:hover {
+    background: var(--plum-900);
+    color: var(--porcelain);
+  }
+
+  .price-block {
+    display: grid;
+    gap: 2rem;
+    scroll-margin-top: 8rem;
+  }
+
+  @media (min-width: 960px) {
+    .price-block {
+      grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+      align-items: start;
+    }
+
+    .price-block__head {
+      position: sticky;
+      top: calc(var(--header-h) + 5rem);
+    }
+  }
+
+  section[id] {
+    scroll-margin-top: calc(var(--header-h) + 3.5rem);
+  }
+
+  .price-block__head {
+    display: grid;
+    gap: 0.8rem;
+    justify-items: start;
+  }
+
+  .price-block__head h2 {
+    font-size: var(--step-4);
+  }
+
+  .price-block__head p:not(.eyebrow) {
+    color: var(--text-soft);
+  }
+
+  .terms {
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-radius: var(--radius-l);
+    background: var(--white);
+    box-shadow: var(--shadow-s);
+  }
+
+  .terms h2 {
+    font-size: var(--step-3);
+    margin-bottom: 1.2rem;
+  }
+
+  .terms ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .terms li {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    color: var(--text-soft);
+  }
+
+  .terms li :global(svg) {
+    width: 1.3rem;
+    height: 1.3rem;
+    flex: none;
+    margin-top: 0.15rem;
+    color: var(--gold-600);
+  }
+
+  .terms a {
+    color: var(--berry-700);
+  }
+
+  .terms__note {
+    margin-top: 1.4rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+</style>

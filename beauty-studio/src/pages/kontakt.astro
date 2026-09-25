@@ -1,0 +1,238 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Visit from '../components/Visit.astro';
+import Faq from '../components/Faq.astro';
+import ContactForm from '../components/ContactForm.svelte';
+import VoucherBuilder from '../components/VoucherBuilder.svelte';
+import { site } from '../data/site';
+import { generalFaq } from '../data/content';
+---
+
+<BaseLayout
+  title="Kontakt & Anfahrt"
+  description="So erreichst du Maison Trois in Wil: Adresse, Öffnungszeiten, Anfahrt, Kontaktformular und Gutscheine."
+>
+  <PageHero
+    eyebrow="Kontakt"
+    lead="Fragen zu einer Behandlung, einem Gutschein oder deinem Termin? Ruf uns an, schreib uns oder komm vorbei – wir freuen uns auf dich."
+  >
+    Wir sind <em class="accent">für dich da.</em>
+  </PageHero>
+
+  <section class="section section--tight">
+    <div class="container">
+      <ul class="cards">
+        <li class="reveal">
+          <Icon name="phone" />
+          <h2>Anrufen</h2>
+          <p>Di – Sa während der Öffnungszeiten</p>
+          <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
+        </li>
+        <li class="reveal" style="--delay: 90">
+          <Icon name="mail" />
+          <h2>Schreiben</h2>
+          <p>Antwort innerhalb eines Arbeitstages</p>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </li>
+        <li class="reveal" style="--delay: 180">
+          <Icon name="calendar" />
+          <h2>Online buchen</h2>
+          <p>Rund um die Uhr, mit Live-Vorschau</p>
+          <a href="/buchen">Termin buchen</a>
+        </li>
+        <li class="reveal" style="--delay: 270">
+          <Icon name="instagram" />
+          <h2>Instagram</h2>
+          <p>Neue Looks & freie Termine</p>
+          <span>{site.instagram}</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--blush">
+    <div class="container">
+      <div class="reveal">
+        <Visit />
+      </div>
+      <div class="travel reveal">
+        <div>
+          <Icon name="train" />
+          <p>
+            <strong>Mit dem Zug:</strong> Ab Bahnhof Wil sind es drei Gehminuten die Obere
+            Bahnhofstrasse hinauf.
+          </p>
+        </div>
+        <div>
+          <Icon name="car" />
+          <p>
+            <strong>Mit dem Auto:</strong> Öffentliche Parkhäuser rund um den Bahnhof, ca. zwei
+            Gehminuten entfernt.
+          </p>
+        </div>
+        <div>
+          <Icon name="pin" />
+          <p>
+            <strong>Eingang:</strong> {site.address.floor}. Klingel «Maison Trois».
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="kontaktformular">
+    <div class="container form-grid">
+      <div class="section-head reveal">
+        <p class="eyebrow">Nachricht</p>
+        <h2>
+          Schreib <em class="accent">uns.</em>
+        </h2>
+        <p>
+          Für Terminbuchungen nutze am besten die <a href="/buchen">Online-Buchung</a> – so siehst
+          du sofort freie Zeiten. Für alles andere sind wir hier erreichbar.
+        </p>
+      </div>
+      <div class="reveal">
+        <ContactForm client:visible />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--blush" id="gutscheine">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Gutscheine</p>
+        <h2>
+          Schenk eine <em class="accent">Auszeit.</em>
+        </h2>
+        <p>
+          Wertgutscheine ab CHF 50.– oder eine Lieblingsbehandlung – gestalte deinen Gutschein und
+          frag ihn direkt an. Abholung im Studio oder Versand per Post.
+        </p>
+      </div>
+      <div class="reveal">
+        <VoucherBuilder client:visible />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <div class="section-head reveal">
+        <p class="eyebrow">Gut zu wissen</p>
+        <h2>
+          Häufige <em class="accent">Fragen.</em>
+        </h2>
+      </div>
+      <div class="reveal">
+        <Faq items={generalFaq} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  }
+
+  .cards li {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    padding: 1.5rem;
+    border-radius: var(--radius-m);
+    background: var(--white);
+    border: 1px solid var(--line);
+  }
+
+  .cards :global(svg) {
+    width: 1.6rem;
+    height: 1.6rem;
+    color: var(--gold-600);
+    margin-bottom: 0.4rem;
+  }
+
+  .cards h2 {
+    font-size: 1.35rem;
+  }
+
+  .cards p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+
+  .cards a,
+  .cards span {
+    margin-top: 0.3rem;
+    font-weight: 500;
+    color: var(--berry-700);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  .cards a:hover {
+    text-decoration: underline;
+  }
+
+  .travel {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  }
+
+  .travel > div {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    padding: 1.1rem 1.2rem;
+    border-radius: var(--radius-m);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .travel :global(svg) {
+    width: 1.4rem;
+    height: 1.4rem;
+    flex: none;
+    color: var(--gold-600);
+  }
+
+  .travel p {
+    font-size: 0.92rem;
+    color: var(--text-soft);
+  }
+
+  .travel strong {
+    color: var(--plum-900);
+    font-weight: 500;
+  }
+
+  .form-grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  @media (min-width: 960px) {
+    .form-grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+  }
+
+  .form-grid a {
+    color: var(--berry-700);
+  }
+
+  #gutscheine,
+  #kontaktformular {
+    scroll-margin-top: var(--header-h);
+  }
+</style>

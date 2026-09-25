@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { policies } from '../data/services';
+---
+
+<BaseLayout
+  title="AGB & Stornierung"
+  description="Termin- und Stornobedingungen von Maison Trois, Wil SG (Demo)."
+>
+  <PageHero
+    eyebrow="AGB & Stornierung"
+    lead="Faire Regeln für alle – damit jede Kundin ihren Wunschtermin bekommt."
+  >
+    Termin- & <em class="accent">Stornobedingungen</em>
+  </PageHero>
+  <section class="section section--tight">
+    <div class="container container--narrow prose legal">
+      <p class="legal__note">
+        <strong>Demo-Hinweis:</strong> Diese Bedingungen gehören zu einem fiktiven Studio und dienen
+        der Veranschaulichung des Buchungsablaufs.
+      </p>
+      <h2>1. Terminbuchung</h2>
+      <p>
+        Termine können online, telefonisch oder im Studio gebucht werden. Mit der Buchung
+        reservieren wir die angegebene Behandlungszeit exklusiv für dich. Du erhältst eine
+        Bestätigung per E-Mail und auf Wunsch eine SMS-Erinnerung 24 Stunden vorher.
+      </p>
+      <h2>2. Verschieben & Stornieren</h2>
+      <ul>
+        <li>{policies.cancellation}</li>
+        <li>{policies.lateCancellation}</li>
+        <li>
+          Bei mehr als 15 Minuten Verspätung kann die Behandlung gekürzt oder neu terminiert werden.
+        </li>
+      </ul>
+      <h2>3. Preise & Bezahlung</h2>
+      <p>
+        Es gelten die Preise gemäss aktueller Preisliste in Schweizer Franken. {policies.payment}{' '}
+        Aufpreise für Länge, Technik, Nail Art oder Extras werden bei der Buchung transparent
+        angezeigt.
+      </p>
+      <h2>4. Permanent Make-up</h2>
+      <p>
+        Vor jeder PMU-Behandlung führen wir ein kostenloses Vorgespräch inklusive
+        Verträglichkeitstest durch. Die Nachbehandlung nach 6–8 Wochen ist im Preis enthalten.
+      </p>
+      <h2>5. Gewährleistung</h2>
+      <p>
+        Löst sich innerhalb von 5 Tagen ein Nagel oder eine grössere Anzahl Extensions ohne äussere
+        Einwirkung, bessern wir kostenlos nach. Bitte melde dich dafür direkt bei uns.
+      </p>
+      <h2>6. Gesundheit</h2>
+      <p>
+        Bitte informiere uns vor der Behandlung über Allergien, Schwangerschaft, Augen- oder
+        Hauterkrankungen. Bei Unverträglichkeiten dürfen wir eine Behandlung zu deinem Schutz
+        ablehnen.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal {
+    max-width: 760px;
+  }
+
+  .legal__note {
+    padding: 1rem 1.2rem;
+    border-radius: 14px;
+    background: var(--gold-200);
+    color: #574120 !important;
+  }
+</style>

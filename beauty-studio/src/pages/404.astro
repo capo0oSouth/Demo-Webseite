@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import NailVisual from '../components/visuals/NailVisual.svelte';
+---
+
+<BaseLayout title="Seite nicht gefunden">
+  <section class="nf">
+    <div class="container nf__inner">
+      <div class="nf__visual" aria-hidden="true">
+        <NailVisual shape="stiletto" length="long" color="#7A2E49" finish="chrome" instant />
+      </div>
+      <p class="eyebrow">Fehler 404</p>
+      <h1>
+        Hoppla, diese Seite <em class="accent">gibt es nicht.</em>
+      </h1>
+      <p class="lead">Vielleicht findest du, was du suchst, über einen dieser Wege:</p>
+      <div class="nf__links">
+        <a href="/" class="btn">
+          Zur Startseite
+        </a>
+        <a href="/buchen" class="btn btn--outline">
+          <Icon name="calendar" /> Termin buchen
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    padding-block: clamp(3rem, 2rem + 5vw, 7rem);
+    text-align: center;
+  }
+
+  .nf__inner {
+    display: grid;
+    justify-items: center;
+    gap: 1.2rem;
+  }
+
+  .nf__visual {
+    width: 220px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(160deg, var(--blush-100), var(--cream));
+  }
+
+  h1 {
+    font-size: var(--step-4);
+    max-width: 16ch;
+  }
+
+  .nf__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+</style>

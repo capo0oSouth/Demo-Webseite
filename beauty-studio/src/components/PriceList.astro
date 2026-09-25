@@ -1,0 +1,183 @@
+---
+import Icon from './Icon.astro';
+import { treatmentsFor, type CategoryId } from '../data/services';
+import { formatDuration } from '../lib/booking';
+
+interface Props {
+  category: CategoryId;
+  compact?: boolean;
+}
+
+const { category, compact = false } = Astro.props;
+const list = treatmentsFor(category);
+
+const surcharges = (t: (typeof list)[number]) =>
+  t.groups
+    .map((g) => {
+      const paid = g.choices.filter((c) => c.price);
+      if (!paid.length) return null;
+      // Gleiche Aufpreise zusammenfassen: «French, Babyboomer + 15.–»
+      const byPrice = new Map<number, string[]>();
+      for (const c of paid) byPrice.set(c.price!, [...(byPrice.get(c.price!) ?? []), c.label]);
+      const parts = [...byPrice.entries()].map(([p, labels]) => `${labels.join(', ')} + ${p}.–`);
+      return { label: g.label, text: parts.join(' · ') };
+    })
+    .filter(Boolean) as { label: string; text: string }[];
+---
+
+<ul class:list={['prices', { 'prices--compact': compact }]}>
+  {list.map((t) => (
+    <li class="price">
+      <div class="price__main">
+        <div class="price__title">
+          <h3>{t.name}</h3>
+          {t.badge && <span class="chip chip--gold">{t.badge}</span>}
+        </div>
+        <p class="price__tagline">{t.tagline}</p>
+        {!compact && (
+          <dl class="price__extras">
+            {surcharges(t).map((s) => (
+              <div>
+                <dt>{s.label}</dt>
+                <dd>{s.text}</dd>
+              </div>
+            ))}
+            {t.addons.length > 0 && (
+              <div>
+                <dt>Extras</dt>
+                <dd>{t.addons.map((a) => `${a.label} + ${a.price}.–`).join(' · ')}</dd>
+              </div>
+            )}
+          </dl>
+        )}
+      </div>
+      <div class="price__side">
+        <span class="price__time">
+          <Icon name="clock" /> {formatDuration(t.minutes)}
+        </span>
+        <span class="price__value">
+          {surcharges(t).length > 0 && <small>ab</small>} CHF {t.price}.–
+        </span>
+        <a href={`/buchen?behandlung=${t.id}`} class="link-arrow" aria-label={`${t.name} buchen`}>
+          Buchen <Icon name="arrow" />
+        </a>
+      </div>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .prices {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .price {
+    display: grid;
+    gap: 0.8rem 2rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (min-width: 720px) {
+    .price {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+    }
+  }
+
+  .price__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.8rem;
+  }
+
+  .price__title h3 {
+    font-size: 1.35rem;
+  }
+
+  .price__tagline {
+    margin-top: 0.2rem;
+    color: var(--text-soft);
+    font-size: 0.95rem;
+  }
+
+  .price__extras {
+    margin: 0.7rem 0 0;
+    display: grid;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+  }
+
+  .price__extras div {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 0.6rem;
+  }
+
+  .price__extras dt {
+    color: var(--gold-600);
+    font-weight: 500;
+  }
+
+  .price__extras dd {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .price__side {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.4rem;
+  }
+
+  @media (min-width: 720px) {
+    .price__side {
+      display: grid;
+      justify-items: end;
+      gap: 0.3rem;
+      text-align: right;
+    }
+  }
+
+  .price__time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .price__time :global(svg) {
+    width: 1rem;
+    height: 1rem;
+    color: var(--gold-500);
+  }
+
+  .price__value {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    white-space: nowrap;
+  }
+
+  .price__value small {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .prices--compact .price {
+    padding: 1rem 0;
+  }
+
+  @media (max-width: 520px) {
+    .price__extras div {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>

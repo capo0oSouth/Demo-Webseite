@@ -1,21 +1,1031 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import Marquee from '../components/Marquee.astro';
+import Reviews from '../components/Reviews.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Visit from '../components/Visit.astro';
+import HeroShapes from '../components/visuals/HeroShapes.svelte';
+import NailStudio from '../components/visuals/NailStudio.svelte';
+import NailVisual from '../components/visuals/NailVisual.svelte';
+import EyeVisual from '../components/visuals/EyeVisual.svelte';
+import { categories, treatmentsFor } from '../data/services';
+import { team } from '../data/team';
+import { generalFaq, values } from '../data/content';
+import { site } from '../data/site';
+
+const years = new Date().getFullYear() - site.founded;
+
+const highlights: Record<string, string[]> = {
+  nails: ['gel-lack', 'biab', 'gel-neuset'],
+  lashes: ['lash-neuset', 'lash-lift', 'lash-refill'],
+  brows: ['brow-lamination', 'brow-henna', 'brow-pmu'],
+};
+
+const looks = [
+  {
+    name: 'Milky Almond',
+    nail: { shape: 'almond', length: 'medium', color: '#F3ECE6' },
+    text: 'Mandelform, mittlere Länge, milchiges Weiss – der zeitlose Bestseller.',
+    treatment: 'Gel-Modellage · Neuset',
+    price: 130,
+    href: '/buchen?behandlung=gel-neuset&shape=almond&length=medium&color=milky&finish=solid',
+  },
+  {
+    name: 'Clean French',
+    nail: { shape: 'squoval', length: 'natural', color: '#F3ECE6', finish: 'french' },
+    text: 'Feine French auf den eigenen Nägeln – elegant und bürotauglich.',
+    treatment: 'Gel-Lack',
+    price: 90,
+    href: '/buchen?behandlung=gel-lack&shape=squoval&color=milky&finish=french',
+  },
+  {
+    name: 'Cherry Coffin',
+    nail: { shape: 'coffin', length: 'long', color: '#A3182D' },
+    text: 'Ballerina-Form in sattem Kirschrot – ein Statement für jeden Anlass.',
+    treatment: 'Gel-Modellage · Neuset',
+    price: 140,
+    href: '/buchen?behandlung=gel-neuset&shape=coffin&length=long&color=cherry&finish=solid',
+  },
+  {
+    name: 'Natural Classic',
+    eye: {
+      focus: 'lashes',
+      lashMode: 'extension',
+      technique: 'classic',
+      look: 'natural',
+      curl: 'c',
+      lashLength: 'medium',
+    } as const,
+    text: 'Eine Extension pro Wimper, sanfter C-Curl – wie frisch getuscht.',
+    treatment: 'Wimpernverlängerung · Classic',
+    price: 150,
+    href: '/buchen?behandlung=lash-neuset&technique=classic&look=natural&curl=c&lashlength=medium',
+  },
+  {
+    name: 'Soft Cat Eye',
+    eye: {
+      focus: 'lashes',
+      lashMode: 'extension',
+      technique: 'volume',
+      look: 'cat',
+      curl: 'cc',
+      lashLength: 'long',
+    } as const,
+    text: 'Volume-Fächer, nach aussen länger – öffnet und hebt den Blick.',
+    treatment: 'Wimpernverlängerung · Volume',
+    price: 190,
+    href: '/buchen?behandlung=lash-neuset&technique=volume&look=cat&curl=cc&lashlength=long',
+  },
+  {
+    name: 'Fluffy Brows',
+    eye: {
+      focus: 'brows',
+      browMode: 'lamination',
+      browTinted: true,
+      browColor: '#5A3F30',
+    } as const,
+    text: 'Laminiert und gefärbt in Mittelbraun – volle, gebürstete Brauen.',
+    treatment: 'Brow Lamination mit Färben',
+    price: 94,
+    href: '/buchen?behandlung=brow-lamination&tint=tint&browcolor=medium',
+  },
+];
 ---
 
-<BaseLayout title="Beauty Studio">
-  <main class="placeholder">
-    <h1>Beauty Studio</h1>
-    <p>Die Website befindet sich im Aufbau.</p>
-  </main>
+<BaseLayout>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow reveal">Nails · Lashes · Brows in Wil SG</p>
+        <h1 class="reveal" style="--delay: 80">
+          Schönheit, <em class="accent">bis ins kleinste Detail.</em>
+        </h1>
+        <p class="lead reveal" style="--delay: 160">
+          Seit {site.founded} verwöhnen Noemi, Alessia und Lea ihre Kundinnen an der Oberen
+          Bahnhofstrasse – mit präziser Handarbeit, ehrlicher Beratung und einem Studio zum
+          Durchatmen.
+        </p>
+        <div class="hero__actions reveal" style="--delay: 240">
+          <a href="/buchen" class="btn btn--accent">
+            <Icon name="calendar" /> Termin buchen
+          </a>
+          <a href="#leistungen" class="btn btn--outline">
+            Behandlungen entdecken
+          </a>
+        </div>
+        <ul class="hero__facts reveal" style="--delay: 320">
+          <li>
+            <strong>{years}</strong>
+            <span>Jahre in Wil</span>
+          </li>
+          <li>
+            <strong>3</strong>
+            <span>Inhaberinnen</span>
+          </li>
+          <li>
+            <strong>
+              4.9 <Icon name="star" class="star" />
+            </strong>
+            <span>aus 380+ Bewertungen</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="hero__media">
+        <div class="hero__arch reveal-mask">
+          <Photo
+            name="hero"
+            alt="Nageldesignerin bei der Arbeit im hellen Studio von Maison Trois"
+            fallback="nails"
+            loading="eager"
+            sizes="(min-width: 960px) 45vw, 100vw"
+          />
+        </div>
+        <div class="hero__float hero__float--shapes reveal" style="--delay: 500">
+          <HeroShapes client:visible />
+        </div>
+        <div class="hero__float hero__float--badge reveal" style="--delay: 650">
+          <Icon name="sparkle" />
+          <span>
+            <strong>Neu:</strong> Look online gestalten &amp; Preis sofort sehen
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Marquee
+    items={[
+      'Gel-Lack',
+      'BIAB',
+      'Gel-Modellage',
+      'Nail Art',
+      'Classic Lashes',
+      'Volume Lashes',
+      'Lash Lifting',
+      'Brow Lamination',
+      'Henna Brows',
+      'Microblading',
+    ]}
+  />
+
+  <!-- Leistungen -->
+  <section class="section" id="leistungen">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <p class="eyebrow">Unsere Leidenschaften</p>
+        <h2>
+          Drei Welten, <em class="accent">ein Anspruch.</em>
+        </h2>
+        <p>
+          Jede von uns hat sich auf ein Handwerk spezialisiert – und liebt es. Das spürst du bei
+          jedem Termin.
+        </p>
+      </div>
+      <div class="services">
+        {categories.map((cat, i) => (
+          <article class="service reveal" style={`--delay: ${i * 120}`}>
+            <a href={cat.href} class="service__media" tabindex="-1" aria-hidden="true">
+              <Photo
+                name={`category-${cat.id}`}
+                alt=""
+                fallback={
+                  cat.id === 'nails' ? 'nails-french' : cat.id === 'lashes' ? 'lashes' : 'brows'
+                }
+                sizes="(min-width: 960px) 33vw, 100vw"
+              />
+              <span class="service__index">0{i + 1}</span>
+            </a>
+            <div class="service__body">
+              <h3>
+                <a href={cat.href}>{cat.name}</a>
+              </h3>
+              <p>{cat.intro}</p>
+              <ul>
+                {highlights[cat.id].map((id) => {
+                  const t = treatmentsFor(cat.id).find((x) => x.id === id)!;
+                  return (
+                    <li>
+                      <span>{t.name}</span>
+                      <span class="dots" />
+                      <span>ab {t.price}.–</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <a href={cat.href} class="link-arrow">
+                Alles über {cat.name} <Icon name="arrow" />
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Formen-Studio -->
+  <section class="section section--blush">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Probier es aus</p>
+        <h2>
+          Finde deine <em class="accent">Nagelform.</em>
+        </h2>
+        <p>
+          Tippe dich durch Formen, Längen und Farben. Was dir gefällt, übernimmst du mit einem Klick
+          in die Buchung – inklusive Preis.
+        </p>
+      </div>
+      <div class="reveal">
+        <NailStudio client:visible compact />
+      </div>
+    </div>
+  </section>
+
+  <!-- So funktioniert's -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="steps">
+        <div class="steps__intro reveal">
+          <p class="eyebrow">Online buchen</p>
+          <h2>
+            In drei Schritten <em class="accent">zu deinem Termin.</em>
+          </h2>
+          <a href="/buchen" class="btn">
+            Jetzt ausprobieren <Icon name="arrow" class="arrow" />
+          </a>
+        </div>
+        <ol class="steps__list">
+          <li class="reveal" style="--delay: 0">
+            <span class="steps__num">01</span>
+            <h3>Gestalten</h3>
+            <p>
+              Wähle deine Behandlung und konfiguriere Form, Länge, Technik oder Farbe – mit
+              Live-Vorschau.
+            </p>
+          </li>
+          <li class="reveal" style="--delay: 120">
+            <span class="steps__num">02</span>
+            <h3>Termin wählen</h3>
+            <p>
+              Der Kalender zeigt nur Zeiten, die zur Dauer deiner Behandlung passen. Auch mit
+              Wunsch-Artist.
+            </p>
+          </li>
+          <li class="reveal" style="--delay: 240">
+            <span class="steps__num">03</span>
+            <h3>Geniessen</h3>
+            <p>
+              Du erhältst eine Bestätigung und eine Erinnerung. Bezahlt wird bequem nach der
+              Behandlung.
+            </p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Signature Looks -->
+  <section class="section section--blush">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <p class="eyebrow">Signature Looks</p>
+        <h2>
+          Unsere <em class="accent">Lieblinge</em> zum Nachbuchen.
+        </h2>
+        <p>Beliebte Looks unserer Kundinnen – jeder Look ist direkt mit allen Optionen buchbar.</p>
+      </div>
+      <div class="looks">
+        {looks.map((look, i) => (
+          <article class="look reveal" style={`--delay: ${(i % 3) * 100}`}>
+            <div class="look__visual">
+              {look.nail ? (
+                <NailVisual {...look.nail} instant label={`Look ${look.name}`} />
+              ) : (
+                <EyeVisual {...look.eye} instant label={`Look ${look.name}`} />
+              )}
+            </div>
+            <div class="look__body">
+              <p class="look__kind">{look.treatment}</p>
+              <h3>{look.name}</h3>
+              <p>{look.text}</p>
+              <div class="look__foot">
+                <span class="look__price">CHF {look.price}.–</span>
+                <a href={look.href} class="link-arrow" aria-label={`Look ${look.name} buchen`}>
+                  Look buchen <Icon name="arrow" />
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section">
+    <div class="container">
+      <div class="team-head">
+        <div class="section-head reveal">
+          <p class="eyebrow">Die Inhaberinnen</p>
+          <h2>
+            Drei Freundinnen, <em class="accent">drei Expertinnen.</em>
+          </h2>
+          <p>
+            Kennengelernt haben sich Noemi, Alessia und Lea in der Ausbildung. {site.founded} haben
+            sie sich ihren gemeinsamen Traum erfüllt: ein Studio, in dem Qualität und Herzlichkeit
+            zählen.
+          </p>
+        </div>
+        <a href="/studio" class="link-arrow reveal">
+          Unsere Geschichte <Icon name="arrow" />
+        </a>
+      </div>
+      <div class="team">
+        {team.map((m, i) => (
+          <article class="member reveal" style={`--delay: ${i * 120}`}>
+            <div class="member__photo">
+              <Photo
+                name={`team-${m.id}`}
+                alt={`Porträt von ${m.name}`}
+                fallback="portrait"
+                initial={m.firstName[0]}
+                sizes="(min-width: 960px) 30vw, 90vw"
+                position="50% 25%"
+              />
+              <span class="member__focus">{m.focus}</span>
+            </div>
+            <h3>{m.name}</h3>
+            <p class="member__role">{m.role}</p>
+            <p class="member__quote">«{m.quote}»</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Werte -->
+  <section class="section section--plum values-section">
+    <div class="container values">
+      <div class="values__media reveal-mask">
+        <Photo
+          name="studio-interior"
+          alt="Heller Behandlungsraum mit Nageltisch und Pflanzen im Studio"
+          fallback="studio"
+          sizes="(min-width: 960px) 40vw, 100vw"
+        />
+      </div>
+      <div>
+        <div class="section-head reveal">
+          <p class="eyebrow">Warum Maison Trois</p>
+          <h2>
+            Ein Ort, an dem du <em class="accent accent--light">ankommst.</em>
+          </h2>
+        </div>
+        <ul class="values__list">
+          {values.map((v, i) => (
+            <li class="reveal" style={`--delay: ${i * 100}`}>
+              <span class="values__icon">
+                <Icon name={v.icon} />
+              </span>
+              <div>
+                <h3>{v.title}</h3>
+                <p>{v.text}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bewertungen -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Kundinnenstimmen</p>
+        <h2>
+          Was unsere Kundinnen <em class="accent">sagen.</em>
+        </h2>
+      </div>
+      <div class="reveal">
+        <Reviews />
+      </div>
+    </div>
+  </section>
+
+  <!-- Besuch -->
+  <section class="section section--blush">
+    <div class="container">
+      <div class="reveal">
+        <Visit />
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="container faq-grid">
+      <div class="section-head reveal">
+        <p class="eyebrow">Gut zu wissen</p>
+        <h2>
+          Häufige <em class="accent">Fragen.</em>
+        </h2>
+        <p>Deine Frage ist nicht dabei? Ruf uns an oder schreib uns – wir helfen gern.</p>
+        <a href="/kontakt" class="link-arrow">
+          Kontakt aufnehmen <Icon name="arrow" />
+        </a>
+      </div>
+      <div class="reveal">
+        <Faq items={generalFaq} />
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
 </BaseLayout>
 
 <style>
-  .placeholder {
-    min-height: 100vh;
+  /* Hero */
+  .hero {
+    position: relative;
+    padding-block: clamp(2.5rem, 2rem + 3vw, 5rem) clamp(3.5rem, 3rem + 4vw, 6.5rem);
+    background:
+      radial-gradient(55% 60% at 88% 20%, rgba(239, 207, 198, 0.7), transparent 70%),
+      radial-gradient(40% 40% at 0% 100%, rgba(241, 227, 198, 0.45), transparent 70%),
+      var(--porcelain);
+    overflow: hidden;
+  }
+
+  .hero__grid {
     display: grid;
-    place-content: center;
-    gap: var(--space-2);
-    padding: var(--space-4);
-    text-align: center;
+    gap: clamp(2.5rem, 2rem + 3vw, 4rem);
+    align-items: center;
+  }
+
+  @media (min-width: 960px) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    }
+  }
+
+  .hero__copy {
+    display: grid;
+    gap: 1.4rem;
+    justify-items: start;
+  }
+
+  .hero h1 {
+    max-width: 13.5ch;
+  }
+
+  .hero h1 em {
+    display: inline-block;
+  }
+
+  .hero .lead {
+    max-width: 34rem;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .hero__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem 2.4rem;
+    list-style: none;
+    margin: 0.6rem 0 0;
+    padding: 1.4rem 0 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .hero__facts li {
+    display: grid;
+  }
+
+  .hero__facts strong {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-display);
+    font-weight: 380;
+    font-size: 2rem;
+    line-height: 1.1;
+  }
+
+  .hero__facts :global(.star) {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: var(--gold-500);
+    color: var(--gold-500);
+  }
+
+  .hero__facts span {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .hero__media {
+    position: relative;
+    max-width: 560px;
+    width: 100%;
+    justify-self: center;
+  }
+
+  .hero__arch {
+    aspect-ratio: 4 / 5;
+    border-radius: var(--arch);
+    overflow: hidden;
+    box-shadow: var(--shadow-l);
+  }
+
+  .hero__arch.reveal-mask {
+    clip-path: inset(100% 0 0 0 round 999px 999px 32px 32px);
+  }
+
+  .hero__arch.reveal-mask.is-visible {
+    clip-path: inset(0 0 0 0 round 999px 999px 32px 32px);
+  }
+
+  .hero__float {
+    position: absolute;
+  }
+
+  .hero__float--shapes {
+    left: -1.5rem;
+    bottom: 12%;
+    width: min(290px, 78%);
+  }
+
+  .hero__float--badge {
+    right: -1rem;
+    top: 16%;
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    max-width: 230px;
+    padding: 0.8rem 1rem;
+    border-radius: 18px;
+    background: var(--plum-900);
+    color: var(--blush-100);
+    font-size: 0.85rem;
+    line-height: 1.35;
+    box-shadow: var(--shadow-m);
+  }
+
+  .hero__float--badge :global(svg) {
+    width: 1.4rem;
+    height: 1.4rem;
+    flex: none;
+    color: var(--gold-300);
+  }
+
+  @media (max-width: 600px) {
+    .hero__float--shapes {
+      left: -0.4rem;
+      bottom: 6%;
+    }
+
+    .hero__float--badge {
+      right: -0.4rem;
+      top: 6%;
+      max-width: 190px;
+      font-size: 0.78rem;
+    }
+  }
+
+  /* Leistungen */
+  .services {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 960px) {
+    .services {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .service {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-l);
+    background: var(--white);
+    box-shadow: var(--shadow-s);
+    overflow: hidden;
+    transition:
+      transform 0.5s var(--ease-out),
+      box-shadow 0.5s var(--ease-out);
+  }
+
+  .service:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-m);
+  }
+
+  .service__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 1.45;
+    overflow: hidden;
+  }
+
+  .service__media :global(.photo) {
+    transition: transform 1.2s var(--ease-out);
+  }
+
+  .service:hover .service__media :global(.photo) {
+    transform: scale(1.05);
+  }
+
+  .service__index {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.85);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--gold-600);
+  }
+
+  .service__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.6rem 1.6rem 1.8rem;
+  }
+
+  .service__body h3 {
+    font-size: 2.1rem;
+  }
+
+  .service__body h3 a {
+    text-decoration: none;
+  }
+
+  .service__body p {
+    color: var(--text-soft);
+  }
+
+  .service__body ul {
+    list-style: none;
+    margin: 0 0 0.4rem;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+    font-size: 0.92rem;
+  }
+
+  .service__body li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .service__body li .dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--line-strong);
+    transform: translateY(-3px);
+  }
+
+  .service__body li span:last-child {
+    white-space: nowrap;
+    color: var(--berry-700);
+    font-weight: 500;
+  }
+
+  .service__body .link-arrow {
+    margin-top: auto;
+    align-self: flex-start;
+  }
+
+  /* Steps */
+  .steps {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 960px) {
+    .steps {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr);
+      align-items: start;
+    }
+  }
+
+  .steps__intro {
+    display: grid;
+    gap: 1.2rem;
+    justify-items: start;
+  }
+
+  .steps__intro h2 {
+    font-size: var(--step-3);
+  }
+
+  .steps__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  @media (min-width: 720px) {
+    .steps__list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .steps__list li {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    padding: 1.6rem;
+    border-radius: var(--radius-m);
+    border: 1px solid var(--line);
+    background: var(--white);
+  }
+
+  .steps__num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 2.4rem;
+    line-height: 1;
+    color: var(--gold-500);
+  }
+
+  .steps__list h3 {
+    font-size: 1.35rem;
+  }
+
+  .steps__list p {
+    color: var(--text-soft);
+    font-size: 0.95rem;
+  }
+
+  /* Looks */
+  .looks {
+    display: grid;
+    gap: 1.4rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  }
+
+  .look {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-l);
+    background: var(--white);
+    overflow: hidden;
+    box-shadow: var(--shadow-s);
+    transition:
+      transform 0.5s var(--ease-out),
+      box-shadow 0.5s var(--ease-out);
+  }
+
+  .look:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-m);
+  }
+
+  .look__visual {
+    position: relative;
+    aspect-ratio: 1.6;
+    background:
+      radial-gradient(60% 60% at 50% 40%, #fff, rgba(255, 255, 255, 0) 70%),
+      linear-gradient(160deg, var(--blush-100), var(--cream));
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .look__visual :global(svg.nail-visual) {
+    height: 100%;
+    width: auto;
+  }
+
+  .look__visual :global(svg.eye-visual) {
+    position: absolute;
+    inset: 0;
+  }
+
+  .look__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.4rem 1.5rem 1.5rem;
+  }
+
+  .look__kind {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold-600);
+  }
+
+  .look__body h3 {
+    font-size: 1.55rem;
+  }
+
+  .look__body > p:not(.look__kind) {
+    color: var(--text-soft);
+    font-size: 0.95rem;
+  }
+
+  .look__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .look__price {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+  }
+
+  /* Team */
+  .team-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem 2rem;
+    margin-bottom: clamp(2.2rem, 1.5rem + 3vw, 4rem);
+  }
+
+  .team-head .section-head {
+    margin-bottom: 0;
+  }
+
+  .team {
+    display: grid;
+    gap: 2rem 1.5rem;
+  }
+
+  @media (min-width: 760px) {
+    .team {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .member {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+  }
+
+  .member__photo {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--arch);
+    overflow: hidden;
+    margin-bottom: 0.9rem;
+    box-shadow: var(--shadow-s);
+  }
+
+  .member__photo :global(.photo) {
+    transition: transform 1.2s var(--ease-out);
+  }
+
+  .member:hover .member__photo :global(.photo) {
+    transform: scale(1.04);
+  }
+
+  .member__focus {
+    position: absolute;
+    left: 50%;
+    bottom: 1rem;
+    translate: -50% 0;
+    padding: 0.35rem 1rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--berry-700);
+  }
+
+  .member h3 {
+    font-size: 1.6rem;
+  }
+
+  .member__role {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--gold-600);
+  }
+
+  .member__quote {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--text-soft);
+  }
+
+  /* Werte */
+  .values {
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+    align-items: center;
+  }
+
+  @media (min-width: 960px) {
+    .values {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+  }
+
+  .values__media {
+    aspect-ratio: 4 / 5;
+    border-radius: var(--arch);
+    overflow: hidden;
+  }
+
+  .values__media.reveal-mask {
+    clip-path: inset(100% 0 0 0 round 999px 999px 32px 32px);
+  }
+
+  .values__media.reveal-mask.is-visible {
+    clip-path: inset(0 0 0 0 round 999px 999px 32px 32px);
+  }
+
+  .values-section .eyebrow {
+    color: var(--gold-300);
+  }
+
+  .accent--light {
+    color: var(--rose-400) !important;
+  }
+
+  .values__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.6rem;
+  }
+
+  .values__list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.1rem;
+    align-items: start;
+  }
+
+  .values__icon {
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid rgba(230, 207, 159, 0.4);
+    color: var(--gold-300);
+  }
+
+  .values__icon :global(svg) {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  .values__list h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .values__list p {
+    color: rgba(251, 240, 236, 0.75);
+  }
+
+  /* FAQ */
+  .faq-grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  @media (min-width: 960px) {
+    .faq-grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+  }
+
+  .faq-grid .section-head {
+    justify-items: start;
   }
 </style>
